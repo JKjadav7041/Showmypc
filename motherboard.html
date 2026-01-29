@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowMyPc | Ports & Connectors</title>
+    <link rel="icon" sizes="32x32" href="./images/tab2.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #09090b;
+            color: #f8fafc; 
+        }
+        .glass-nav {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .dropdown-menu {
+            display: none; opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .dropdown-menu.show { 
+            display: block; opacity: 1; transform: translateY(0); 
+        }
+        .text-shimmer {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer { to { background-position: 200% center; } }
+        
+        /* Single Image Container */
+        .port-image-container {
+            position: relative;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+            height: 100%;
+            min-height: 320px;
+            overflow: hidden;
+            cursor: zoom-in;
+        }
+        .port-image-container:hover {
+            transform: scale(1.02);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        .port-image {
+            max-width: 200px;
+            max-height: 200px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Zoom Modal */
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: zoom-out;
+            animation: fadeIn 0.3s ease;
+        }
+        .zoom-modal.active {
+            display: flex;
+        }
+        .zoom-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .zoom-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            z-index: 10000;
+            background: rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .zoom-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        /* Mobile Menu Fixed */
+        #mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        #mobile-menu.menu-open {
+            transform: translateX(0);
+        }
+        
+        /* Content Animation */
+        .content-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+            margin-bottom: 3rem;
+        }
+        .content-section.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Fixed Navbar -->
+    <header class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 bg-blue-600 text-white rounded-lg flex items-center justify-center font-extrabold text-xl shadow-lg shadow-blue-900/20">S</div>
+                <span class="text-2xl font-extrabold tracking-tight text-white">ShowMyPc</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center space-x-10 text-sm font-bold uppercase tracking-wide text-zinc-400">
+                <a href="index.html" class="hover:text-blue-500 transition-colors">Home</a>
+                <a href="index.html#developer" class="hover:text-blue-500 transition-colors">Developer</a>
+                <a href="./3d.html" class="hover:text-blue-500 transition-colors">3D-Models</a>
+                <div class="relative dropdown">
+                    <button onclick="toggleDropdown(event)" class="hover:text-blue-500 transition-colors flex items-center gap-1">
+                        Learning <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div id="learning-menu" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl z-[100]">
+                        <a href="./Port_and_connector.html" class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Port & Connector</a>
+                        <a href="#" class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Motherboard</a>
+                    </div>
+                </div>
+                <a href="./T-shooting.html" class="text-red-500 hover:text-red-400 transition-colors">T-shooting</a>
+            </nav>
+
+            <button onclick="toggleMenu()" class="lg:hidden p-2 text-white">
+                <svg id="menu-icon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-y-0 right-0 w-64 bg-zinc-950 z-[70] lg:hidden border-l border-white/10 p-8 flex flex-col space-y-6 text-lg font-bold shadow-2xl">
+        <button onclick="toggleMenu()" class="self-end mb-4 text-zinc-500 font-normal hover:text-white text-xl">✕</button>
+        <a href="index.html" class="text-white hover:text-blue-500 py-2">Home</a>
+        <a href="index.html#developer" class="text-white hover:text-blue-500 py-2">Developer</a>
+        <a href="./3d.html" class="text-white hover:text-blue-500 py-2">3D-Models</a>
+        <div class="border-t border-white/5 pt-4 space-y-4">
+            <p class="text-blue-500 text-xs uppercase tracking-widest">Learning</p>
+            <a href="./Port_and_connector.html" class="block text-sm text-zinc-400 hover:text-white py-1">Port & Connector</a>
+            <a href="#" class="block text-sm text-zinc-400 hover:text-white py-1">Motherboard</a>
+        </div>
+        <a href="./T-shooting.html" class="text-red-500 hover:text-red-400 py-2">T-shooting</a>
+    </div>
+
+    <!-- Zoom Modal -->
+    <div id="zoom-modal" class="zoom-modal" onclick="closeZoom()">
+        <span class="zoom-close" onclick="closeZoom()">×</span>
+        <img id="zoomed-image" src="" alt="Zoomed Image">
+    </div>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-blue-500 font-bold uppercase tracking-[0.3em] text-xs mb-4">Hardware Learning</h2>
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter mb-6 text-white">
+                <span class="text-shimmer">Types Of Motherboard</span>
+            </h1>
+            <p class="text-zinc-400 text-lg max-w-3xl mx-auto leading-relaxed">
+                Learn about essential computer motherboards. Discover types, features, and functions that power your PC.    
+            </p>
+        </div>
+    </section>
+
+    <!-- Single Content Layout -->
+    <main class="max-w-7xl mx-auto px-8 pb-24 space-y-12">
+        
+        <!-- Full AT -->
+        <section class="content-section">
+            <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="port-image-container" onclick="openZoom('images/Full_AT.jpg')">
+                        <img src="images/Full_AT.jpg" alt="Full AT Motherboard" class="port-image">
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-black mb-6">Full AT Motherboard</h2>
+                        <p class="text-zinc-300 text-lg mb-4">The full AT motherboard from factor introduced by IBM in 1984.</p>
+                        <p class="text-zinc-400 mb-3">The Full AT motherboard is 12" wide x 13.8" deep and only fits into full size AT tower case.</p>
+                        <p class="text-zinc-400">These was first type of motherboard  , which were 12 inches wide and 11 inches long.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Baby AT -->
+        <section class="content-section">
+            <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="lg:order-last port-image-container" onclick="openZoom('images/Baby_AT.jpg')">
+                        <img src="images/Baby_AT.jpg" alt="Baby AT Motherboard" class="port-image">
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-black mb-6">Baby AT Motherboard</h2>
+                        <p class="text-zinc-300 text-lg mb-4">The Baby AT motherboard from factor introduced by IBM in 1990`s.</p>
+                        <p class="text-zinc-400 mb-3">The Baby AT motherboard is 8.57" wide x 13.04" deep which is almost the same as the origal IBM AT.</p>
+                        <p class="text-zinc-400">This motherboard was 10 inches wide and 8.5 inches long. and specially made for calssic Pentium and Pentium Pro processors.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ATX -->
+        <section class="content-section">
+            <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="port-image-container" onclick="openZoom('images/ATX_mother.jpg')">
+                        <img src="images/ATX_mother.jpg" alt="ATX Motherboard" class="port-image">
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-black mb-6">ATX Motherboard</h2>
+                        <p class="text-zinc-300 text-lg mb-4">The ATX(Advanced Technology eXtended.) motherboard is a standard motherboard form factor introduced by Intel in 1995.</p>
+                        <p class="text-zinc-400 mb-3">It provides a standardized layout for components, better airflow, and supports modern CPUs, RAM, expansion slots, and power management features.</p>
+                        <p class="text-zinc-400">It is commonly used in desktop computers because it offers good expandability and easy hardware upgrades.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LPX -->
+        <section class="content-section">
+            <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="lg:order-last port-image-container" onclick="openZoom('images/LPX_mother.jpg')">
+                        <img src="images/LPX_mother.jpg" alt="LPX Motherboard" class="port-image">
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-black mb-6">LPX Motherboard</h2>
+                        <p class="text-zinc-300 text-lg mb-4">The LPX motherboard (Low Profile eXtension) is an older motherboard form factor designed for slim, low-profile desktop computers.</p>
+                        <p class="text-zinc-400 mb-3">It uses a riser card to hold expansion slots, allowing the system to be compact.</p>
+                        <p class="text-zinc-400">LPX motherboards were popular in the 1990s but are now obsolete.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- BTX -->
+        <section class="content-section">
+            <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                    <div class="port-image-container" onclick="openZoom('images/BTX_mother.JPG')">
+                        <img src="images/BTX_mother.JPG" alt="BTX Motherboard" class="port-image">
+                    </div>
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-black mb-6">BTX Motherboard</h2>
+                        <p class="text-zinc-300 text-lg mb-4">The BTX motherboard (Balanced Technology eXtended) is a motherboard form factor developed by Intel.
+It was designed to improve cooling, airflow, and thermal management compared to ATX.</p>
+                        <p class="text-zinc-400 mb-3">BTX uses a different layout to reduce heat from high-power components.</p>
+                        <p class="text-zinc-400">However, it was not widely adopted and was eventually discontinued.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Fixed JavaScript -->
+    <script>
+        // Zoom Functions
+        function openZoom(imageSrc) {
+            event.stopPropagation();
+            const modal = document.getElementById('zoom-modal');
+            const zoomedImage = document.getElementById('zoomed-image');
+            zoomedImage.src = imageSrc;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeZoom() {
+            const modal = document.getElementById('zoom-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeZoom();
+            }
+        });
+
+        // Navbar Functions
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('learning-menu');
+            menu.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('learning-menu');
+            const dropdownButton = event.target.closest('.dropdown');
+            if (menu && !dropdownButton && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        });
+
+        function toggleMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            mobileMenu.classList.toggle('menu-open');
+            
+            if (mobileMenu.classList.contains('menu-open')) {
+                menuIcon.innerHTML = '<path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round"/>';
+            } else {
+                menuIcon.innerHTML = '<path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/>';
+            }
+        }
+
+        // Scroll Animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+            
+            document.querySelectorAll('.content-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

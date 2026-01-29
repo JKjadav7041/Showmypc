@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowMyPc | Ports & Connectors</title>
+    <link rel="icon" sizes="32x32" href="./images/tab2.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Dark Theme Base */
+        html{
+            scroll-behavior: smooth;
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #09090b;
+            color: #f8fafc; 
+        }
+        
+        /* Dark Glass Navbar */
+        .glass-nav {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Dropdown Visibility Logic */
+        .dropdown-menu {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu Sidebar */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        .menu-open { transform: translateX(0) !important; }
+
+        /* Custom Shimmer Effect */
+        .text-shimmer {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+            background-size: 200% auto;
+             background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        /* Port Image Container */
+        .port-image {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 16px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            height: 100%;
+            min-height: 320px;
+        }
+        
+        .port-image:hover {
+            transform: scale(1.02);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        .port-icon {
+            width: 140px;
+            height: 140px;
+            margin-bottom: 20px;
+        }
+        
+        /* Smooth content animations */
+        .content-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            margin-bottom: 2rem;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Staggered animations */
+        .content-section:nth-child(1) { animation-delay: 0.1s; }
+        .content-section:nth-child(2) { animation-delay: 0.2s; }
+        .content-section:nth-child(3) { animation-delay: 0.3s; }
+        .content-section:nth-child(4) { animation-delay: 0.4s; }
+        .content-section:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <header class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 bg-blue-600 text-white rounded-lg flex items-center justify-center font-extrabold text-xl shadow-lg shadow-blue-900/20">S</div>
+                <span class="text-2xl font-extrabold tracking-tight text-white">ShowMyPc</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center space-x-10 text-sm font-bold uppercase tracking-wide text-zinc-400">
+                <a href="index.html" class="hover:text-blue-500 transition-colors">Home</a>
+                <a href="index.html#developer" class="hover:text-blue-500 transition-colors">Developer</a>
+                <a href="./3d.html" class="hover:text-blue-500 transition-colors">3D-Models</a>
+                
+                <div class="relative dropdown">
+                    <button onclick="toggleDropdown(event)" class="hover:text-blue-500 transition-colors flex items-center gap-1">
+                        Learning <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div id="learning-menu" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl">
+                        <a href="./Port_and_connector.html" class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Port & Connector</a>
+                        <a href="./motherboard.html" class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Motherboard</a>
+                    </div>
+                </div>
+
+                <a href="#" class="text-red-500 hover:text-red-400 transition-colors">T-shooting</a>
+            </nav>
+
+            <button onclick="toggleMenu()" class="lg:hidden p-2 text-white">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-y-0 right-0 w-64 bg-zinc-950 z-[60] transform translate-x-full lg:hidden border-l border-white/10 p-8 flex flex-col space-y-6 text-lg font-bold shadow-2xl">
+        <button onclick="toggleMenu()" class="self-end mb-4 text-zinc-500 font-normal hover:text-white">✕ Close</button>
+        <a href="index.html" class="text-white hover:text-blue-500">Home</a>
+        <a href="index.html#developer" class="text-white hover:text-blue-500">Developer</a>
+        <a href="./3d.html" class="text-white hover:text-blue-500">3D-Models</a>
+        <div class="border-t border-white/5 pt-4 space-y-4">
+            <p class="text-blue-500 text-xs uppercase tracking-widest">Learning</p>
+            <a href="./Port_and_connector.html" class="block text-sm text-zinc-400 hover:text-white">Port & Connector</a>
+            <a href="./motherboard.html" class="block text-sm text-zinc-400 hover:text-white">Motherboard</a>
+            
+        </div>
+        <a href="#" class="text-red-500 hover:text-red-400">T-shooting</a>
+    </div>
+
+    <!-- Page Header -->
+    <section class="pt-32 pb-16 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-blue-500 font-bold uppercase tracking-[0.3em] text-xs mb-4">Hardware Learning</h2>
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter mb-6 text-white">
+                <span class="text-shimmer">Ports & Connectors</span>
+            </h1>
+            <p class="text-zinc-400 text-lg max-w-3xl mx-auto leading-relaxed">
+                Learn about essential computer ports and connectors. Understand their specifications, uses, and how they connect your devices.
+            </p>
+        </div>
+    </section>
+
+  <!-- one -USB -->
+<main class="max-w-7xl mx-auto px-8 pb-24">     
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/USB-A PORT.jpg"
+                         alt="USB-A Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/USB-A Conn.jpg"
+                         alt="USB-A Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    USB-A Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    USB-A (Universal Serial Bus) is used to connect various devices
+                    such as keyboards, mice, and external drives to a computer.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It is commonly used to connect computers, monitors, TVs,
+                    and projectors.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    HDMI supports HD, Full HD, 4K and even 8K resolution depending
+                    on the HDMI version.
+                </p>
+
+                <p class="text-zinc-400">
+                    It provides clear output with no signal loss, making it
+                    the most popular display interface.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- two serial -->
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/serial-port.jpg"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/serial-connector.jpg"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    Serial Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                   A Serial Port is a communication port that transfers data one bit at a time between a computer and external devices.
+                </p>
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                   It uses serial communication standards like RS-232 and requires fewer wires.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    A Serial Connector (such as DB-9 or DB-25) provides the physical connection for serial data transfer.
+                </p>
+
+                <p class="text-zinc-400">
+                    Serial ports are commonly used in modems, microcontrollers, and industrial devices.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+<!-- three parelle  -->
+
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/Parallel_computer_printer_port.jpg"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/parelle-connector.webp"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    Parallel Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    A Parallel Port is a communication port that transfers multiple bits of data at the same time (usually 8 bits) using parallel communication.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It was mainly used to connect printers, scanners, and older external devices to computers.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    A Parallel Connector (DB-25) provides the physical interface for data transmission.
+                </p>
+
+                <p class="text-zinc-400">
+                    Parallel ports are faster than serial ports but use more wires and are now replaced by USB.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+<!-- five VGA -->
+
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/VGA port.jpg"
+                         alt="VGA Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/VGA conn.jpg"
+                         alt="VGA Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    VGA Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                   A VGA Port (Video Graphics Array) is used to connect a computer to a monitor or projector for video output.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It transmits analog video signals and supports display resolutions like 640×480 and higher.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    The VGA connector is a 15-pin (DE-15) D-sub connector with three rows of pins.
+                </p>
+
+                <p class="text-zinc-400">
+                    VGA is now largely replaced by HDMI and DisplayPort but is still found in older systems.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- six  HDMI -->
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/HDMI PORT.webp"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/HDMI CONNECTOR.webp"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    HDMI Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    HDMI (High-Definition Multimedia Interface) is used to transmit
+                    high-quality digital video and audio through a single cable.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It is commonly used to connect computers, monitors, TVs,
+                    and projectors.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    HDMI supports HD, Full HD, 4K and even 8K resolution depending
+                    on the HDMI version.
+                </p>
+
+                <p class="text-zinc-400">
+                    It provides clear output with no signal loss, making it
+                    the most popular display interface.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+
+
+<!-- seven  PS/2 -->
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/PS_2_port.jpg"
+                         alt="PS2 Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/ps-2_conne.webp"
+                         alt="PS2 Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    PS/2 Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                   A PS/2 Port is used to connect keyboard and mouse to a computer.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It uses a 6-pin mini-DIN connector for communication.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    PS/2 ports are color-coded: purple for keyboard and green for mouse.
+                </p>
+
+                <p class="text-zinc-400">
+                    They were common in older PCs and are now replaced by USB.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- eight RCA  -->
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/RCA_port.webp"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/RCA_conn.jpeg"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    RCA Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    An RCA Port is used to transmit analog audio and video signals between electronic devices like TVs and DVD players.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It usually comes in red, white, and yellow colors for right audio, left audio, and video signals.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                   The RCA connector has a single center pin and an outer metal ring for grounding.
+                </p>
+
+                <p class="text-zinc-400">
+                    RCA ports are easy to use but provide lower quality compared to HDMI.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- nine power port  -->
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/power_port.jpeg"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/power_conn.jpg"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    Power Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    A Power Cable Port is used to supply electrical power to a computer or electronic device.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It connects the device to a main power source through a power cable.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    The power connector (such as IEC C13/C14) ensures safe and stable power transfer.
+                </p>
+
+                <p class="text-zinc-400">
+                   Power cable ports are commonly found in PCs, monitors, printers, and SMPS units.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+
+<!-- ten Ethernet -->
+ <main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/Ethernet_port.jpg"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/Ethernet_conn.jpeg"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    Ethernet Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    An Ethernet Port is used to connect a computer or device to a wired network for internet or data communication.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    It supports LAN connections and provides stable, high-speed data transfer.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    The Ethernet connector is an RJ-45 connector with 8 pins.
+                </p>
+
+                <p class="text-zinc-400">
+                    Ethernet ports are commonly used in PCs, routers, switches, and modems.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+<!-- eleven firewire -->
+<main class="max-w-7xl mx-auto px-8 pb-24">
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+
+            <!-- LEFT : IMAGE CARD -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 opacity-10 rounded-2xl"></div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4
+                            bg-gradient-to-br from-white to-zinc-100
+                            border border-zinc-300
+                            rounded-2xl p-6 min-h-[320px]
+                            shadow-lg">
+
+                    <img src="images/Fire_wire_port.jpg"
+                         alt="HDMI Port"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+
+                    <img src="images/fire_wire_conn.jpg"
+                         alt="HDMI Connector"
+                         class="rounded-xl bg-white p-3 object-contain shadow-md mx-auto">
+                </div>
+            </div>
+
+            <!-- RIGHT : THEORY -->
+            <div>
+                <h2 class="text-3xl md:text-4xl font-black mb-6">
+                    Fire-wire Port & Connector
+                </h2>
+
+                <p class="text-zinc-300 text-lg mb-4">
+                    A FireWire Port is a high-speed interface used to transfer data between a computer and external devices.
+It is commonly used for digital cameras, external hard drives, and audio equipment.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                    The FireWire connector comes in 4-pin, 6-pin, and 9-pin types.
+                </p>
+
+                <p class="text-zinc-400 mb-3">
+                   FireWire supports fast and stable data transfer and is also known as IEEE 1394.
+                </p>
+
+                <p class="text-zinc-400">
+                   A FireWire Port (IEEE 1394) is a high-speed interface used to connect devices like digital cameras and external storage to a computer.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+</main>
+
+    <script>
+        // Toggle Desktop Dropdown
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('learning-menu');
+            menu.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            const menu = document.getElementById('learning-menu');
+            if (menu && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        }
+
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('menu-open');
+        }
+        
+        // Add scroll animation trigger
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements when they come into view
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

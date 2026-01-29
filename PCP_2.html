@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced 3D DB-25 Serial Port</title>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        canvas { display: block; }
+        
+        .info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            max-width: 280px;
+        }
+        
+        .info h3 {
+            margin: 0 0 10px 0;
+            color: #1a1a2e;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .info p {
+            margin: 0;
+            color: #555;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // --- Scene Setup ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a2e);
+    scene.fog = new THREE.Fog(0x1a1a2e, 10, 50);
+    
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    camera.position.set(0, 3, 10);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.update();
+
+    // --- Enhanced Materials ---
+    const plasticMat = new THREE.MeshStandardMaterial({ 
+        color: 0x2a2a2a, 
+        roughness: 0.7,
+        metalness: 0.1
+    });
+    
+    const grayPlasticMat = new THREE.MeshStandardMaterial({ 
+        color: 0xcccccc, 
+        roughness: 0.6,
+        metalness: 0.05
+    });
+    
+    const metalMat = new THREE.MeshStandardMaterial({ 
+        color: 0xaaaaaa, 
+        metalness: 0.95, 
+        roughness: 0.2
+    });
+    
+    const pinMat = new THREE.MeshStandardMaterial({ 
+        color: 0xffcc33, 
+        metalness: 1.0, 
+        roughness: 0.15,
+        emissive: 0x332200,
+        emissiveIntensity: 0.2
+    });
+    
+    const bluePlasticMat = new THREE.MeshStandardMaterial({ 
+        color: 0x3366cc, 
+        roughness: 0.6,
+        metalness: 0.1
+    });
+    
+    const cableMat = new THREE.MeshStandardMaterial({ 
+        color: 0x4a4a4a, 
+        roughness: 0.8,
+        metalness: 0.1
+    });
+
+    // --- Create Female DB-25 Connector (Left) ---
+    function createFemaleConnector() {
+        const group = new THREE.Group();
+
+        // Main plastic base (wider for DB-25)
+        const baseGeo = new THREE.BoxGeometry(4.8, 1.4, 0.8);
+        const base = new THREE.Mesh(baseGeo, grayPlasticMat);
+        base.castShadow = true;
+        group.add(base);
+
+        // Trapezoidal metal shield (wider D-shape for DB-25)
+        const shieldShape = new THREE.Shape();
+        shieldShape.moveTo(-1.5, 0.48);
+        shieldShape.lineTo(1.5, 0.48);
+        shieldShape.lineTo(1.25, -0.48);
+        shieldShape.lineTo(-1.25, -0.48);
+        shieldShape.lineTo(-1.5, 0.48);
+
+        const shieldHole = new THREE.Path();
+        shieldHole.moveTo(-1.35, 0.38);
+        shieldHole.lineTo(1.35, 0.38);
+        shieldHole.lineTo(1.12, -0.38);
+        shieldHole.lineTo(-1.12, -0.38);
+        shieldHole.lineTo(-1.35, 0.38);
+        shieldShape.holes.push(shieldHole);
+
+        const extrudeSettings = { depth: 0.15, bevelEnabled: false };
+        const shieldGeo = new THREE.ExtrudeGeometry(shieldShape, extrudeSettings);
+        const shield = new THREE.Mesh(shieldGeo, metalMat);
+        shield.position.set(0, 0, 0.475);
+        shield.castShadow = true;
+        group.add(shield);
+
+        // Blue insulator insert
+        const insertShape = new THREE.Shape();
+        insertShape.moveTo(-1.25, 0.35);
+        insertShape.lineTo(1.25, 0.35);
+        insertShape.lineTo(1.05, -0.35);
+        insertShape.lineTo(-1.05, -0.35);
+        insertShape.lineTo(-1.25, 0.35);
+
+        const insertGeo = new THREE.ExtrudeGeometry(insertShape, { depth: 0.25, bevelEnabled: false });
+        const insert = new THREE.Mesh(insertGeo, bluePlasticMat);
+        insert.position.set(0, 0, 0.55);
+        insert.castShadow = true;
+        group.add(insert);
+
+        // 25 Pin holes (female) - 3 rows: 13 top, 12 bottom (staggered)
+        const holeGeo = new THREE.CylinderGeometry(0.045, 0.045, 0.3, 16);
+        const holeMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+        
+        const pinPositions = [
+            // Top row (13 pins)
+            [-1.05, 0.22], [-0.88, 0.22], [-0.71, 0.22], [-0.54, 0.22], [-0.37, 0.22], 
+            [-0.20, 0.22], [-0.03, 0.22], [0.14, 0.22], [0.31, 0.22], [0.48, 0.22], 
+            [0.65, 0.22], [0.82, 0.22], [0.99, 0.22],
+            // Bottom row (12 pins)
+            [-0.97, -0.22], [-0.80, -0.22], [-0.63, -0.22], [-0.46, -0.22], [-0.29, -0.22], 
+            [-0.12, -0.22], [0.05, -0.22], [0.22, -0.22], [0.39, -0.22], [0.56, -0.22], 
+            [0.73, -0.22], [0.90, -0.22]
+        ];
+
+        pinPositions.forEach(pos => {
+            const hole = new THREE.Mesh(holeGeo, holeMat);
+            hole.rotation.x = Math.PI / 2;
+            hole.position.set(pos[0], pos[1], 0.75);
+            group.add(hole);
+        });
+
+        // Mounting screws (further apart for DB-25)
+        const screwGeo = new THREE.CylinderGeometry(0.18, 0.18, 0.6, 6);
+        const leftScrew = new THREE.Mesh(screwGeo, metalMat);
+        leftScrew.rotation.x = Math.PI / 2;
+        leftScrew.position.set(-2.1, 0, 0.55);
+        leftScrew.castShadow = true;
+        group.add(leftScrew);
+
+        const rightScrew = leftScrew.clone();
+        rightScrew.position.set(2.1, 0, 0.55);
+        rightScrew.castShadow = true;
+        group.add(rightScrew);
+
+        // Rear housing (wider)
+        const rearGeo = new THREE.BoxGeometry(5.2, 1.8, 0.6);
+        const rear = new THREE.Mesh(rearGeo, grayPlasticMat);
+        rear.position.z = -0.3;
+        rear.castShadow = true;
+        group.add(rear);
+
+        // Side grips (wider spacing)
+        const gripGeo = new THREE.BoxGeometry(0.3, 2.3, 1.5);
+        const leftGrip = new THREE.Mesh(gripGeo, grayPlasticMat);
+        leftGrip.position.set(-2.7, 0, 0);
+        leftGrip.castShadow = true;
+        group.add(leftGrip);
+
+        const rightGrip = leftGrip.clone();
+        rightGrip.position.set(2.7, 0, 0);
+        rightGrip.castShadow = true;
+        group.add(rightGrip);
+
+        group.position.x = -5;
+        return group;
+    }
+
+    // --- Create Male DB-25 Connector (Right) ---
+    function createMaleConnector() {
+        const group = new THREE.Group();
+
+        // Main plastic base (wider for DB-25)
+        const baseGeo = new THREE.BoxGeometry(4.8, 1.4, 0.8);
+        const base = new THREE.Mesh(baseGeo, grayPlasticMat);
+        base.castShadow = true;
+        group.add(base);
+
+        // Trapezoidal metal shield (wider D-shape for DB-25)
+        const shieldShape = new THREE.Shape();
+        shieldShape.moveTo(-1.5, 0.48);
+        shieldShape.lineTo(1.5, 0.48);
+        shieldShape.lineTo(1.25, -0.48);
+        shieldShape.lineTo(-1.25, -0.48);
+        shieldShape.lineTo(-1.5, 0.48);
+
+        const shieldHole = new THREE.Path();
+        shieldHole.moveTo(-1.35, 0.38);
+        shieldHole.lineTo(1.35, 0.38);
+        shieldHole.lineTo(1.12, -0.38);
+        shieldHole.lineTo(-1.12, -0.38);
+        shieldHole.lineTo(-1.35, 0.38);
+        shieldShape.holes.push(shieldHole);
+
+        const extrudeSettings = { depth: 0.15, bevelEnabled: false };
+        const shieldGeo = new THREE.ExtrudeGeometry(shieldShape, extrudeSettings);
+        const shield = new THREE.Mesh(shieldGeo, metalMat);
+        shield.position.set(0, 0, 0.475);
+        shield.castShadow = true;
+        group.add(shield);
+
+        // Pin insert
+        const insertShape = new THREE.Shape();
+        insertShape.moveTo(-1.25, 0.35);
+        insertShape.lineTo(1.25, 0.35);
+        insertShape.lineTo(1.05, -0.35);
+        insertShape.lineTo(-1.05, -0.35);
+        insertShape.lineTo(-1.25, 0.35);
+
+        const insertGeo = new THREE.ExtrudeGeometry(insertShape, { depth: 0.25, bevelEnabled: false });
+        const insert = new THREE.Mesh(insertGeo, grayPlasticMat);
+        insert.position.set(0, 0, 0.55);
+        insert.castShadow = true;
+        group.add(insert);
+
+        // 25 Protruding pins (male) - 3 rows
+        const pinGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.55, 16);
+        const pinPositions = [
+            // Top row (13 pins)
+            [-1.05, 0.22], [-0.88, 0.22], [-0.71, 0.22], [-0.54, 0.22], [-0.37, 0.22], 
+            [-0.20, 0.22], [-0.03, 0.22], [0.14, 0.22], [0.31, 0.22], [0.48, 0.22], 
+            [0.65, 0.22], [0.82, 0.22], [0.99, 0.22],
+            // Bottom row (12 pins)
+            [-0.97, -0.22], [-0.80, -0.22], [-0.63, -0.22], [-0.46, -0.22], [-0.29, -0.22], 
+            [-0.12, -0.22], [0.05, -0.22], [0.22, -0.22], [0.39, -0.22], [0.56, -0.22], 
+            [0.73, -0.22], [0.90, -0.22]
+        ];
+
+        pinPositions.forEach(pos => {
+            const pin = new THREE.Mesh(pinGeo, pinMat);
+            pin.rotation.x = Math.PI / 2;
+            pin.position.set(pos[0], pos[1], 0.85);
+            pin.castShadow = true;
+            group.add(pin);
+        });
+
+        // Mounting screw holes
+        const screwHoleGeo = new THREE.CylinderGeometry(0.14, 0.14, 0.6, 16);
+        const leftScrewHole = new THREE.Mesh(screwHoleGeo, metalMat);
+        leftScrewHole.rotation.x = Math.PI / 2;
+        leftScrewHole.position.set(-2.1, 0, 0.55);
+        leftScrewHole.castShadow = true;
+        group.add(leftScrewHole);
+
+        const rightScrewHole = leftScrewHole.clone();
+        rightScrewHole.position.set(2.1, 0, 0.55);
+        rightScrewHole.castShadow = true;
+        group.add(rightScrewHole);
+
+        // Rear housing
+        const rearGeo = new THREE.BoxGeometry(5.2, 1.8, 0.6);
+        const rear = new THREE.Mesh(rearGeo, grayPlasticMat);
+        rear.position.z = -0.3;
+        rear.castShadow = true;
+        group.add(rear);
+
+        // Side grips
+        const gripGeo = new THREE.BoxGeometry(0.3, 2.3, 1.5);
+        const leftGrip = new THREE.Mesh(gripGeo, grayPlasticMat);
+        leftGrip.position.set(-2.7, 0, 0);
+        leftGrip.castShadow = true;
+        group.add(leftGrip);
+
+        const rightGrip = leftGrip.clone();
+        rightGrip.position.set(2.7, 0, 0);
+        rightGrip.castShadow = true;
+        group.add(rightGrip);
+
+        group.position.x = 5;
+        return group;
+    }
+
+    // --- Create Cables with Strain Relief ---
+    function createCableAssembly() {
+        const group = new THREE.Group();
+
+        // Left cable with strain relief boot
+        const leftStrainRelief = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.5, 0.3, 1.3, 16),
+            plasticMat
+        );
+        leftStrainRelief.rotation.z = Math.PI / 2;
+        leftStrainRelief.position.set(-4, 0, -0.6);
+        leftStrainRelief.castShadow = true;
+        group.add(leftStrainRelief);
+
+        const leftCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-3.5, 0, -0.6),
+            new THREE.Vector3(-4.5, 0.8, -1.5),
+            new THREE.Vector3(-5.5, 0.3, -3.5),
+            new THREE.Vector3(-6, -0.2, -5.5)
+        ]);
+
+        const leftCableGeo = new THREE.TubeGeometry(leftCurve, 64, 0.28, 16, false);
+        const leftCable = new THREE.Mesh(leftCableGeo, cableMat);
+        leftCable.castShadow = true;
+        group.add(leftCable);
+
+        // Right cable with strain relief boot
+        const rightStrainRelief = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.5, 0.3, 1.3, 16),
+            plasticMat
+        );
+        rightStrainRelief.rotation.z = Math.PI / 2;
+        rightStrainRelief.position.set(4, 0, -0.6);
+        rightStrainRelief.castShadow = true;
+        group.add(rightStrainRelief);
+
+        const rightCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(3.5, 0, -0.6),
+            new THREE.Vector3(4.5, -0.8, -1.5),
+            new THREE.Vector3(5.5, -0.3, -3.5),
+            new THREE.Vector3(6, 0.2, -5.5)
+        ]);
+
+        const rightCableGeo = new THREE.TubeGeometry(rightCurve, 64, 0.28, 16, false);
+        const rightCable = new THREE.Mesh(rightCableGeo, cableMat);
+        rightCable.castShadow = true;
+        group.add(rightCable);
+
+        return group;
+    }
+
+    // --- Add Components to Scene ---
+    const femaleConnector = createFemaleConnector();
+    const maleConnector = createMaleConnector();
+    const cables = createCableAssembly();
+
+    const serialPortGroup = new THREE.Group();
+    serialPortGroup.add(femaleConnector);
+    serialPortGroup.add(maleConnector);
+    serialPortGroup.add(cables);
+    scene.add(serialPortGroup);
+
+    // --- Enhanced Lighting ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    mainLight.position.set(5, 8, 5);
+    mainLight.castShadow = true;
+    mainLight.shadow.mapSize.width = 2048;
+    mainLight.shadow.mapSize.height = 2048;
+    mainLight.shadow.camera.near = 0.5;
+    mainLight.shadow.camera.far = 50;
+    scene.add(mainLight);
+
+    const fillLight = new THREE.DirectionalLight(0x6699ff, 0.4);
+    fillLight.position.set(-5, 3, -5);
+    scene.add(fillLight);
+
+    const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
+    rimLight.position.set(0, -5, -5);
+    scene.add(rimLight);
+
+    // Add point lights for extra highlights
+    const pointLight1 = new THREE.PointLight(0x667eea, 0.8, 15);
+    pointLight1.position.set(-5, 2, 2);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0x764ba2, 0.8, 15);
+    pointLight2.position.set(5, 2, 2);
+    scene.add(pointLight2);
+
+    // Ground plane for shadows
+    const groundGeo = new THREE.PlaneGeometry(50, 50);
+    const groundMat = new THREE.ShadowMaterial({ opacity: 0.3 });
+    const ground = new THREE.Mesh(groundGeo, groundMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // --- Animation Loop ---
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+
+    // --- Window Resize ---
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate();
+</script>
+</body>
+</html>

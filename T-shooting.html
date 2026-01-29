@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowMyPc | Troubleshooting Guide</title>
+    <link rel="icon" sizes="32x32" href="./images/tab2.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        /* Dark Theme Base */
+        html{
+            scroll-behavior: smooth;
+        }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #09090b;
+            color: #f8fafc; 
+        }
+        
+        /* Dark Glass Navbar */
+        .glass-nav {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Dropdown Visibility Logic */
+        .dropdown-menu {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu Sidebar */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+        .menu-open { transform: translateX(0) !important; }
+
+        /* Custom Shimmer Effect */
+        .text-shimmer {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
+            background-size: 200% auto;
+             background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        /* Smooth content animations */
+        .content-section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+            margin-bottom: 2rem;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Staggered animations */
+        .content-section:nth-child(1) { animation-delay: 0.1s; }
+        .content-section:nth-child(2) { animation-delay: 0.2s; }
+        .content-section:nth-child(3) { animation-delay: 0.3s; }
+        .content-section:nth-child(4) { animation-delay: 0.4s; }
+        .content-section:nth-child(5) { animation-delay: 0.5s; }
+        .content-section:nth-child(6) { animation-delay: 0.6s; }
+        .content-section:nth-child(7) { animation-delay: 0.7s; }
+        .content-section:nth-child(8) { animation-delay: 0.8s; }
+        .content-section:nth-child(9) { animation-delay: 0.9s; }
+        .content-section:nth-child(10) { animation-delay: 1.0s; }
+
+        /* Step numbering */
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <header class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            
+            <div class="flex items-center space-x-2">
+                <div class="w-9 h-9 bg-blue-600 text-white rounded-lg flex items-center justify-center font-extrabold text-xl shadow-lg shadow-blue-900/20">S</div>
+                <span class="text-2xl font-extrabold tracking-tight text-white">ShowMyPc</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center space-x-10 text-sm font-bold uppercase tracking-wide text-zinc-400">
+                <a href="index.html" class="hover:text-blue-500 transition-colors">Home</a>
+                <a href="index.html#developer" class="hover:text-blue-500 transition-colors">Developer</a>
+                <a href="./3d.html" class="hover:text-blue-500 transition-colors">3D-Models</a>
+                
+                <div class="relative dropdown">
+                    <button onclick="toggleDropdown(event)" class="hover:text-blue-500 transition-colors flex items-center gap-1">
+                        Learning <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div id="learning-menu" class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl">
+                        <a href="./Port_and_connector.html" class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Port & Connector</a>
+                        <a href="./motherboard.html" class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Motherboard</a>
+                    </div>
+                </div>
+
+                <a href="#" class="text-red-500 hover:text-red-400 transition-colors">T-shooting</a>
+            </nav>
+
+            <button onclick="toggleMenu()" class="lg:hidden p-2 text-white">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-y-0 right-0 w-64 bg-zinc-950 z-[60] transform translate-x-full lg:hidden border-l border-white/10 p-8 flex flex-col space-y-6 text-lg font-bold shadow-2xl">
+        <button onclick="toggleMenu()" class="self-end mb-4 text-zinc-500 font-normal hover:text-white">✕ Close</button>
+        <a href="index.html" class="text-white hover:text-blue-500">Home</a>
+        <a href="index.html#developer" class="text-white hover:text-blue-500">Developer</a>
+        <a href="./3d.html" class="text-white hover:text-blue-500">3D-Models</a>
+        <div class="border-t border-white/5 pt-4 space-y-4">
+            <p class="text-blue-500 text-xs uppercase tracking-widest">Learning</p>
+            <a href="./Port_and_connector.html" class="block text-sm text-zinc-400 hover:text-white">Port & Connector</a>
+            <a href="./motherboard.html" class="block text-sm text-zinc-400 hover:text-white">Motherboard</a>
+        </div>
+        <a href="#" class="text-red-500 hover:text-red-400">T-shooting</a>
+    </div>
+
+    <!-- Page Header -->
+    <section class="pt-32 pb-16 px-6">
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-red-500 font-bold uppercase tracking-[0.3em] text-xs mb-4">Computer Troubleshooting</h2>
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter mb-6 text-white">
+                <span class="text-shimmer">Fix Common PC Problems</span>
+            </h1>
+            <p class="text-zinc-400 text-lg max-w-3xl mx-auto leading-relaxed">
+                Step-by-step solutions to the most common computer problems. From hardware issues to software errors, we've got you covered.
+            </p>
+        </div>
+    </section>
+
+<!-- 1. Computer Not Turning ON -->
+<main class="max-w-7xl mx-auto px-8 pb-24">     
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #1</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                Computer Not Turning ON
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                When your computer doesn't power on at all, it's usually a power supply or hardware connection issue [web:1][web:3].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Check the power source:</strong> Verify that the wall outlet is working by testing it with another device like a lamp or monitor [web:3].
+                </li>
+                <li>
+                    <strong class="text-white">Inspect power cables:</strong> Ensure the power cable is securely connected to both the computer and the outlet. Check if the power strip is turned on [web:3].
+                </li>
+                <li>
+                    <strong class="text-white">Discharge residual power:</strong> Unplug the power cable, hold the power button for 15-20 seconds to drain any remaining power, then reconnect and try again [web:3].
+                </li>
+                <li>
+                    <strong class="text-white">Check PSU connections:</strong> Open the case and verify all internal power supply cables are firmly connected to the motherboard and components [web:5].
+                </li>
+                <li>
+                    <strong class="text-white">Test the power supply:</strong> If available, use the PSU's Built-In Self-Test (BIST) button or try a different power supply to rule out PSU failure [web:3][web:5].
+                </li>
+                <li>
+                    <strong class="text-white">Clear CMOS:</strong> Reset the BIOS by removing the CMOS battery for a few minutes, then reinstalling it [web:5].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 2. No Display on Monitor -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #2</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                No Display on Monitor
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                Your computer powers on but the monitor shows nothing. This is often caused by cable issues or graphics card problems [web:6][web:9].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Check monitor power:</strong> Ensure the monitor is turned on and its power cable is securely connected [web:9].
+                </li>
+                <li>
+                    <strong class="text-white">Verify cable connections:</strong> Check that HDMI, DisplayPort, or VGA cables are connected to the graphics card (not the motherboard) and monitor [web:6][web:9].
+                </li>
+                <li>
+                    <strong class="text-white">Try different cables and ports:</strong> Test with a different video cable or use another port on your graphics card [web:9].
+                </li>
+                <li>
+                    <strong class="text-white">Disconnect peripherals:</strong> Remove all USB devices, external drives, and other peripherals, then restart the computer [web:6].
+                </li>
+                <li>
+                    <strong class="text-white">Reseat the graphics card:</strong> Turn off the PC, remove the graphics card, clean the contacts, and firmly reinstall it ensuring it clicks into place [web:8][web:9].
+                </li>
+                <li>
+                    <strong class="text-white">Reseat RAM modules:</strong> Remove and reinstall RAM sticks one at a time to test if faulty memory is causing the issue [web:6][web:9].
+                </li>
+                <li>
+                    <strong class="text-white">Reset CMOS battery:</strong> Remove the coin-cell battery from the motherboard for 10-20 seconds to reset BIOS settings [web:6].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Keyboard or Mouse Not Working -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #3</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                Keyboard or Mouse Not Working
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                When your keyboard or mouse stops responding, it could be a connectivity, driver, or power issue [web:7][web:10].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Restart your computer:</strong> Use keyboard shortcuts (Windows + X, then navigate to Restart) or force restart by holding the power button [web:7].
+                </li>
+                <li>
+                    <strong class="text-white">Check connections:</strong> For wired devices, ensure cables are securely plugged in. For wireless, check battery levels and Bluetooth/transmitter connections [web:7].
+                </li>
+                <li>
+                    <strong class="text-white">Enable Bluetooth:</strong> Press Windows + A to open Action Center and turn on Bluetooth if using wireless devices [web:7].
+                </li>
+                <li>
+                    <strong class="text-white">Try different USB ports:</strong> Plug the keyboard/mouse into different USB ports on your computer [web:7].
+                </li>
+                <li>
+                    <strong class="text-white">Update drivers:</strong> Press Windows + X, select Device Manager, expand "Keyboards" and "Mice and other pointing devices," right-click your device, and select "Update Driver" [web:7].
+                </li>
+                <li>
+                    <strong class="text-white">Reinstall drivers:</strong> In Device Manager, right-click the device, select "Uninstall device," restart your computer, and Windows will automatically reinstall the driver [web:7].
+                </li>
+                <li>
+                    <strong class="text-white">Test with another device:</strong> Try a different keyboard or mouse to determine if the issue is hardware or software-related [web:7].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 4. USB Device Not Detected -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #4</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                USB Device Not Detected
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                When Windows doesn't recognize your USB device, it's typically a driver, port, or power setting issue [web:11][web:14].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Restart your computer:</strong> A simple reboot can often resolve temporary USB recognition issues [web:15].
+                </li>
+                <li>
+                    <strong class="text-white">Try different USB ports:</strong> Test the device in multiple USB ports, preferably on the back of your computer for desktop PCs [web:15].
+                </li>
+                <li>
+                    <strong class="text-white">Check the device on another computer:</strong> Verify if the USB device is faulty by testing it on a different machine [web:15].
+                </li>
+                <li>
+                    <strong class="text-white">Update USB drivers:</strong> Open Device Manager, expand "Universal Serial Bus controllers," right-click each USB Root Hub, and select "Update driver" [web:14].
+                </li>
+                <li>
+                    <strong class="text-white">Disable USB selective suspend:</strong> Go to Control Panel > Power Options > Change plan settings > Change advanced power settings > USB settings > USB selective suspend setting, and set to "Disabled" [web:11][web:15].
+                </li>
+                <li>
+                    <strong class="text-white">Change drive letter:</strong> Open Disk Management, right-click the USB drive, select "Change Drive Letter and Paths," and assign a new letter [web:11][web:14].
+                </li>
+                <li>
+                    <strong class="text-white">Run Device Diagnostic:</strong> Press Windows + R, type "msdt.exe -ID DeviceDiagnostic," and follow the troubleshooter [web:13].
+                </li>
+                <li>
+                    <strong class="text-white">Reinstall USB controllers:</strong> In Device Manager, uninstall all USB Root Hubs and restart your computer for automatic reinstallation [web:11].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Computer Running Very Slow -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #5</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                Computer Running Very Slow
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                Slow performance is usually caused by too many programs running, insufficient memory, or accumulated system junk [web:16][web:19].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Restart your computer:</strong> Close all programs and restart to clear memory and terminate unnecessary background processes [web:16].
+                </li>
+                <li>
+                    <strong class="text-white">Close unnecessary programs:</strong> Press Ctrl + Shift + Esc to open Task Manager, identify programs using high CPU/memory, and end those tasks [web:19].
+                </li>
+                <li>
+                    <strong class="text-white">Disable startup programs:</strong> In Task Manager, go to the Startup tab and disable programs that don't need to run at boot [web:19].
+                </li>
+                <li>
+                    <strong class="text-white">Clear temporary files:</strong> Press Windows + R, type "temp," delete all files, then repeat with "%temp%" [web:20].
+                </li>
+                <li>
+                    <strong class="text-white">Run Disk Cleanup:</strong> Search for "Disk Cleanup," select your system drive, check all boxes, and delete temporary files [web:16].
+                </li>
+                <li>
+                    <strong class="text-white">Defragment hard drive:</strong> For traditional HDDs (not SSDs), use the built-in defragmentation tool to optimize disk performance [web:19].
+                </li>
+                <li>
+                    <strong class="text-white">Check for malware:</strong> Run a full system scan with Windows Defender or your antivirus software [web:19].
+                </li>
+                <li>
+                    <strong class="text-white">Update Windows:</strong> Install all available Windows updates which may include performance improvements [web:14].
+                </li>
+                <li>
+                    <strong class="text-white">Upgrade RAM:</strong> If your computer still runs slow after these steps, consider adding more RAM for better multitasking [web:19].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Virus or Malware Issue -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #6</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                Virus or Malware Issue
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                Malware infections can cause various problems including slow performance, pop-ups, and data theft [web:17][web:20].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Boot into Safe Mode:</strong> Restart your computer and press F8 before the Windows logo appears, then select Safe Mode [web:17].
+                </li>
+                <li>
+                    <strong class="text-white">Clear temporary files:</strong> Press Windows + R, type "temp," delete all files, then type "%temp%" and delete those files too [web:20].
+                </li>
+                <li>
+                    <strong class="text-white">Install/Update antivirus:</strong> Download and install a reputable antivirus like Windows Defender, Malwarebytes, or Microsoft Security Essentials [web:17].
+                </li>
+                <li>
+                    <strong class="text-white">Run full system scan:</strong> Perform a complete scan of your system and remove all detected threats [web:17][web:20].
+                </li>
+                <li>
+                    <strong class="text-white">Use Malware removal tools:</strong> Download and run specialized tools like ComboFix, TDSSKiller, or Malwarebytes to catch stubborn malware [web:17].
+                </li>
+                <li>
+                    <strong class="text-white">Uninstall suspicious programs:</strong> Use Revo Uninstaller to remove malicious programs and their remnants completely [web:17].
+                </li>
+                <li>
+                    <strong class="text-white">Run System File Checker:</strong> Open Command Prompt as admin and run "sfc /scannow" to repair corrupted system files [web:15].
+                </li>
+                <li>
+                    <strong class="text-white">Update all software:</strong> Ensure Windows, browsers, and all applications are updated to patch security vulnerabilities [web:17].
+                </li>
+                <li>
+                    <strong class="text-white">Change passwords:</strong> After cleaning, change all important passwords as they may have been compromised [web:20].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 7. No Internet Connection -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #7</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                No Internet Connection
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                Internet connectivity issues can stem from router problems, network settings, or ISP issues [web:21][web:24].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Check other devices:</strong> Test if other devices can connect to verify if the issue is with your computer or network [web:24].
+                </li>
+                <li>
+                    <strong class="text-white">Restart your modem and router:</strong> Unplug both devices, wait 30 seconds, plug in the modem first, wait 60 seconds, then plug in the router [web:21][web:24].
+                </li>
+                <li>
+                    <strong class="text-white">Check cable connections:</strong> Ensure Ethernet cables are securely connected and not damaged. For fiber, check the SPDIF module; for cable, tighten the coaxial connection [web:21].
+                </li>
+                <li>
+                    <strong class="text-white">Forget and reconnect to Wi-Fi:</strong> Go to Network Settings, forget your Wi-Fi network, then reconnect by entering the password again [web:22][web:25].
+                </li>
+                <li>
+                    <strong class="text-white">Run Network Troubleshooter:</strong> Right-click the network icon in the system tray and select "Troubleshoot problems" [web:22].
+                </li>
+                <li>
+                    <strong class="text-white">Update network drivers:</strong> Open Device Manager, expand "Network adapters," right-click your adapter, and select "Update driver" [web:22].
+                </li>
+                <li>
+                    <strong class="text-white">Reset network settings:</strong> Go to Settings > Network & Internet > Status > Network reset, then restart your computer [web:22].
+                </li>
+                <li>
+                    <strong class="text-white">Disable VPN/Firewall temporarily:</strong> Turn off VPN and firewall temporarily to see if they're blocking the connection [web:24].
+                </li>
+                <li>
+                    <strong class="text-white">Contact your ISP:</strong> If nothing works, contact your Internet Service Provider to check for outages or account issues [web:21][web:24].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 8. Blue Screen of Death (BSOD) -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #8</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                Blue Screen of Death (BSOD)
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                The Blue Screen of Death indicates critical system errors caused by hardware failures, driver issues, or corrupted files [web:26][web:29].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Note the error code:</strong> Write down the STOP code displayed on the blue screen for troubleshooting reference [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Boot into Safe Mode:</strong> Restart and press F8 repeatedly before Windows loads, then select Safe Mode [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Run System File Checker:</strong> Open Command Prompt as admin and run "sfc /scannow" to repair corrupted system files [web:29].
+                </li>
+                <li>
+                    <strong class="text-white">Run DISM tool:</strong> In Command Prompt (admin), run "DISM /Online /Cleanup-Image /RestoreHealth" to repair the Windows image [web:29].
+                </li>
+                <li>
+                    <strong class="text-white">Check disk for errors:</strong> Run "chkdsk C: /f" in Command Prompt to scan and fix disk errors (replace C: with your system drive) [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Update drivers:</strong> In Device Manager, update all drivers, especially graphics card, chipset, and storage drivers [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Uninstall recent updates:</strong> If BSOD started after a Windows update, uninstall the recent update from Settings > Update & Security > View update history [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Check hardware:</strong> Reseat RAM modules and graphics card to ensure proper connection [web:8].
+                </li>
+                <li>
+                    <strong class="text-white">Restore Windows:</strong> Use System Restore to revert to a point before the BSOD started occurring [web:26].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 9. BIOS Error -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #9</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                BIOS Error
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                BIOS errors prevent your computer from booting properly and can be caused by corrupted firmware, hardware changes, or failed updates [web:27][web:30].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Reset CMOS:</strong> Turn off the computer, unplug it, remove the CMOS battery from the motherboard for 20 minutes, then reinstall it [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Check hardware connections:</strong> Ensure all cables, RAM, and expansion cards are properly seated in their slots [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Remove graphics card:</strong> Try booting without the dedicated graphics card to see if it's causing conflicts [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Replace CMOS battery:</strong> If the battery is old (3-5 years), replace it with a new CR2032 battery [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Update BIOS:</strong> Download the latest BIOS update from your motherboard manufacturer's website onto a USB drive [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Flash BIOS:</strong> Boot into BIOS (usually by pressing Del or F2), navigate to the BIOS update utility, and flash the BIOS using the USB drive [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Use backup BIOS:</strong> If your motherboard has a backup BIOS chip, switch to it using the motherboard's jumper or button [web:27].
+                </li>
+                <li>
+                    <strong class="text-white">Replace BIOS chip:</strong> As a last resort, you may need to replace the BIOS chip or the entire motherboard if corruption is severe [web:27][web:30].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- 10. File Missing or Corrupted -->
+<section class="content-section">
+    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
+        <div class="mb-8">
+            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
+                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #10</span>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
+                File Missing or Corrupted
+            </h2>
+            <p class="text-zinc-400 text-lg mb-6">
+                System files can become corrupted due to malware, improper shutdowns, or disk errors, preventing Windows from starting properly [web:26][web:29].
+            </p>
+        </div>
+
+        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
+            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
+            <ul class="step-list text-zinc-300">
+                <li>
+                    <strong class="text-white">Boot into Safe Mode:</strong> Restart your computer and press F8 before Windows loads, then select Safe Mode [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Run System File Checker:</strong> Open Command Prompt as administrator and run "sfc /scannow" to scan and repair corrupted system files [web:29].
+                </li>
+                <li>
+                    <strong class="text-white">Run DISM tool:</strong> Execute "DISM /Online /Cleanup-Image /RestoreHealth" in Command Prompt (admin) to repair the Windows component store [web:29].
+                </li>
+                <li>
+                    <strong class="text-white">Check disk for errors:</strong> Run "chkdsk C: /f /r" to scan for bad sectors and fix file system errors (replace C: with your drive letter) [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Use Windows Recovery:</strong> Boot from a Windows installation USB, select "Repair your computer," then choose "Startup Repair" [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Restore from backup:</strong> If you have system backups, restore your system to a point before the file corruption occurred [web:26].
+                </li>
+                <li>
+                    <strong class="text-white">Reinstall the application:</strong> If a specific program file is corrupted, uninstall and reinstall that application [web:20].
+                </li>
+                <li>
+                    <strong class="text-white">Perform system restore:</strong> Use System Restore to revert Windows to a previous working state [web:14].
+                </li>
+                <li>
+                    <strong class="text-white">Clean install Windows:</strong> As a last resort, backup your data and perform a clean Windows installation [web:26].
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+</main>
+
+    <script>
+        // Toggle Desktop Dropdown
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('learning-menu');
+            menu.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            const menu = document.getElementById('learning-menu');
+            if (menu && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        }
+
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('menu-open');
+        }
+        
+        // Add scroll animation trigger
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate elements when they come into view
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

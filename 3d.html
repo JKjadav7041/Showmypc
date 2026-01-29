@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Computer Components | ShowMyPc</title>
+    <link rel="icon" sizes="32x32" href="./images/tab2.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Base Styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #09090b;
+            color: #f8fafc;
+        }
+
+        /* Glass Navbar */
+        .glass-nav {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Menu */
+        #mobile-menu {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .menu-open {
+            transform: translateX(0) !important;
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Glass Card Effect */
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        /* Gradient Border Hover */
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+        }
+
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 1rem;
+            padding: 2px;
+            background: linear-gradient(145deg, #3b82f6, #8b5cf6, #ec4899);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .gradient-border:hover::before {
+            opacity: 1;
+        }
+
+        /* Card Hover Effect */
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+        }
+
+        /* Button Gradient */
+        .btn-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Modal Styles */
+        #modelModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 99999;
+            padding: 20px;
+        }
+
+        #modelModal.show {
+            display: block !important;
+        }
+
+        @keyframes modalZoom {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            height: 85vh;
+            max-width: 1400px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            animation: modalZoom 0.3s ease-out;
+        }
+
+        @media (max-width: 768px) {
+            .modal-box {
+                width: 95vw;
+                height: 80vh;
+            }
+        }
+    </style>
+</head>
+
+<body class="overflow-x-hidden">
+
+    <!-- Navigation Bar -->
+    <header class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <div
+                    class="w-9 h-9 bg-blue-600 text-white rounded-lg flex items-center justify-center font-extrabold text-xl shadow-lg shadow-blue-900/20">
+                    S</div>
+                <span class="text-2xl font-extrabold tracking-tight text-white">ShowMyPc</span>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center space-x-10 text-sm font-bold uppercase tracking-wide text-zinc-400">
+                <a href="./index.html" class="hover:text-blue-500 transition-colors">Home</a>
+                <a href="./index.html#developer" class="hover:text-blue-500 transition-colors">Developer</a>
+                <a href="#" class="text-blue-500">3D-Models</a>
+
+                <div class="relative dropdown">
+                    <button onclick="toggleDropdown(event)"
+                        class="hover:text-blue-500 transition-colors flex items-center gap-1">
+                        Learning <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <div id="learning-menu"
+                        class="dropdown-menu absolute top-full left-0 mt-2 w-56 bg-zinc-900 border border-white/10 rounded-xl p-2 shadow-2xl">
+                        <a href="./Port_and_connector.html"
+                            class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Port
+                            & Connector</a>
+                        <a href="./motherboard.html"
+                            class="block px-4 py-3 hover:bg-white/5 hover:text-blue-400 rounded-lg transition text-zinc-300">Motherboard</a>
+                    </div>
+                </div>
+
+                <a href="./T-shooting.html" class="text-red-500 hover:text-red-400 transition-colors">T-shooting</a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button onclick="toggleMenu()" class="lg:hidden p-2 text-white">
+                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Sidebar -->
+    <div id="mobile-menu"
+        class="fixed inset-y-0 right-0 w-64 bg-zinc-950 z-[60] transform translate-x-full lg:hidden border-l border-white/10 p-8 flex flex-col space-y-6 text-lg font-bold shadow-2xl">
+        <button onclick="toggleMenu()" class="self-end mb-4 text-zinc-500 font-normal hover:text-white">✕ Close</button>
+        <a href="./index.html" class="text-white hover:text-blue-500">Home</a>
+        <a href="./index.html#developer" class="text-white hover:text-blue-500">Developer</a>
+        <a href="#" class="text-blue-500">3D-Models</a>
+        <div class="border-t border-white/5 pt-4 space-y-4">
+            <p class="text-blue-500 text-xs uppercase tracking-widest">Learning</p>
+            <a href="./Port_and_connector.html" class="block text-sm text-zinc-400 hover:text-white">Port & Connector</a>
+            <a href="./motherboard.html" class="block text-sm text-zinc-400 hover:text-white">Motherboard</a>
+        </div>
+        <a href="./T-shooting.html" class="text-red-500 hover:text-red-400">T-shooting</a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-32 pb-16">
+
+        <!-- Header -->
+        <div class="max-w-7xl mx-auto mb-10 px-4 md:px-8">
+            <div class="text-center space-y-3 animate-fadeIn">
+                <h1
+                    class="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    3D Computer Components
+                </h1>
+                <p class="text-slate-400 text-sm md:text-base">Explore interactive 3D models of computer hardware</p>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="max-w-7xl mx-auto mb-8 animate-fadeIn px-4 md:px-8">
+            <div class="glass-effect rounded-2xl p-4 md:p-6 shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+
+                    <div class="w-full md:w-auto">
+                        <label class="block text-xs text-slate-400 mb-2 font-medium">Filter by Category</label>
+                        <select id="categoryFilter"
+                            class="w-full md:w-64 bg-slate-800/50 border border-slate-700/50 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                            <option value="all">🔍 All Components</option>
+                            <option value="ports">🔌 Ports & Connectors</option>
+                            <option value="parts">🖥️ Computer Parts</option>
+                        </select>
+                    </div>
+
+                    <div class="w-full md:w-auto">
+                        <label class="block text-xs text-slate-400 mb-2 font-medium">Display Mode</label>
+                        <div class="flex gap-3">
+                            <button id="gridBtn"
+                                class="flex-1 md:flex-none bg-blue-600 border border-blue-500 px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                                </svg>
+                                Grid
+                            </button>
+                            <button id="listBtn"
+                                class="flex-1 md:flex-none bg-slate-800/50 hover:bg-purple-600 border border-slate-700/50 hover:border-purple-500 px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                                List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Models Grid -->
+        <div id="models" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 md:px-8">
+
+            <!-- Card 1: USB Port -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">USB Port</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/f881fba9b3ce4f66858911d48594027b/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Universal Serial Bus (USB) is a standard connection interface for data transfer and power
+                        supply. USB ports enable plug-and-play connectivity for various peripherals.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/f881fba9b3ce4f66858911d48594027b/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+            <!-- Card 2: USB Connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">USB Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/24856204393545a3a648cc41bc913f3b/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A USB connector is the end part of a USB cable.
+                        It is used to connect two devices for data transfer and charging.
+                        USB connectors carry data signals and electric power.
+                        Common USB connectors include USB-A, USB-B, USB-C, Micro-USB, and Mini-USB.
+                        USB-C is the latest connector and can be plugged in either direction.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/24856204393545a3a648cc41bc913f3b/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 3: C-type Port -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">C-type Port</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/5cf2fdd2b7eb465ba6922ae8ec8c1055/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A USB Type-C port is the socket found on devices like mobiles, laptops, and tablets.<br>
+                        It supports fast data transfer, fast charging, and video output.<br>
+                        The Type-C port is small and reversible (no up or down side).<br>
+                        It is used in modern devices.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/5cf2fdd2b7eb465ba6922ae8ec8c1055/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+            <!-- Card 4: C-type connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">C-type connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/39cb1374a9c24cfa815f8efe86a14f61/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A USB Type-C connector is the plug at the end of a USB-C cable.<br>
+                        It fits into the Type-C port from any direction.<br>
+                        It can carry power, data, audio, and video signals.<br>
+                        One Type-C connector can be used for charging and data transfer.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/39cb1374a9c24cfa815f8efe86a14f61/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+            <!-- Card 5: Ethernet port -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Ethernet Port</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/bf9d039159f74f4a9f22757babf87215/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        An Ethernet port is a socket used to connect a device to a wired network. <br>
+                        It provides a stable and fast internet connection. <br>
+                        Ethernet ports are commonly found on computers, routers, and switches. <br>
+                        It uses a LAN (Local Area Network) cable.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/bf9d039159f74f4a9f22757babf87215/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 6: Ethernet connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Ethernet Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/325672cf996e472abaed009b5ca21cfc/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        An Ethernet connector is the plug at the end of an Ethernet cable. <br>
+                        It is also called an RJ-45 connector. <br>
+                        The Ethernet connector connects the cable to the Ethernet port. <br>
+                        It helps in data communication between network devices.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/325672cf996e472abaed009b5ca21cfc/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 7: VGA port and connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">VGA Port and Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/411bfacd11394b989b72222e094d1bc1/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        VGA (Video Graphics Array) is used to connect a computer to a monitor or projector. <br>
+                        A VGA port is the socket on the computer or display device. <br>
+                        A VGA connector is the plug at the end of the VGA cable. <br>
+                        It uses a 15-pin (DE-15) connector. <br>
+                        VGA carries analog video signals only (no audio). <br>
+                        It is an older display interface, mostly replaced by HDMI and DisplayPort.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/411bfacd11394b989b72222e094d1bc1/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 8: power port & Connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Power Port & Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/9b7fe4759a694c978a11c1ccbd64356f/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A power cable is used to supply electrical power to a device. <br>
+                        A power port is the socket on the device where power is received. <br>
+                        A power connector is the plug at the end of the power cable. <br>
+                        It connects the device to a power source like a wall socket or adapter. <br>
+                        Power cables are used in computers, monitors, printers, and chargers. <br>
+                        The main function is to provide safe and continuous electricity to the device.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/9b7fe4759a694c978a11c1ccbd64356f/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 9: PS/ 2 Connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">PS/ 2 Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full" src="./ps_2.html" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        PS/2 is a type of connector used for keyboard and mouse. <br>
+                        A PS/2 port is the round socket on a computer. <br>
+                        A PS/2 connector is the round plug at the end of the PS/2 cable. <br>
+                        It has 6 pins for data communication. <br>
+                        Usually, purple is for keyboard and green is for mouse. <br>
+                        PS/2 is an older interface, now mostly replaced by USB. <br>
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="./ps_2.html">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 10: Serial communication port & Connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Serial communication port & Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full" src="./SCP_2.html" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Serial communication is a method of sending data one bit at a time. <br>
+                        A serial port is a socket used for serial data communication. <br>
+                        A serial connector is the plug attached to the serial cable. <br>
+                        Common serial connectors are DB-9 (9-pin) and DB-25 (25-pin). <br>
+                        Serial ports were used for modems, mice, and industrial devices. <br>
+                        It is an older communication method, now mostly replaced by USB.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="./SCP_2.html">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 11: Parallel communication port & Connector -->
+            <div class="model ports gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Parallel communication port & Connector</h2>
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-semibold rounded-full border border-blue-500/30">
+                        Ports & Connectors
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full" src="./PCP_2.html" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Parallel communication sends multiple bits of data at the same time. <br>
+                        A parallel port is a socket used for parallel data transfer. <br>
+                        A parallel connector is the plug at the end of the parallel cable. <br>
+                        It commonly uses a DB-25 (25-pin) connector. <br>
+                        Parallel ports were mainly used for printers and scanners. <br>
+                        It is an older technology, now mostly replaced by USB.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="./PCP_2.html">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- card 12: processor -->
+
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Processor</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/ab07151166fe4b8ca32831e33e567dcb/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A processor is the brain of the computer. <br>
+                        It is also called the CPU (Central Processing Unit). <br>
+                        The processor executes instructions and performs calculations. <br>
+                        It controls all the operations of the computer. <br>
+                        The speed of a processor is measured in GHz. <br>
+                        Common processor brands are Intel and AMD.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/ab07151166fe4b8ca32831e33e567dcb/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+            <!-- Card 13: RAM Module -->
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">RAM Module</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/6fa0d3b8c5684741be7d7e396e01bc9f/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Random Access Memory (RAM) is volatile memory used for temporary data storage. It provides fast
+                        read and write access to the processor, directly impacting system performance.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/6fa0d3b8c5684741be7d7e396e01bc9f/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+            <!-- Card 14: Hard Disk -->
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Hard Disk</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/1ed2e3560e854fe2a2c028aa85ba8d6e/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A hard disk is a secondary storage device. <br>
+                        It is used to store data permanently. <br>
+                        It stores the operating system, software, and files. <br>
+                        Hard disks have large storage capacity. <br>
+                        Data remains saved even when the power is off. <br>
+                        HDD is slower than SSD, but cheaper. 
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/1ed2e3560e854fe2a2c028aa85ba8d6e/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 15: SSD -->
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">SSD</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/b2face83ca2e463b96753761a23dba30/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        An SSD is a storage device used to store data permanently. <br>
+                        It is faster than a hard disk (HDD). <br>
+                        SSD has no moving parts, so it is more durable. <br>
+                        It provides quick boot and fast file access. <br>
+                        SSD consumes less power. <br>
+                        Common types are SATA SSD and NVMe SSD.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/b2face83ca2e463b96753761a23dba30/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 16: GPU(RTX 3060) -->
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">GPU(RTX 3060)</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/a5a78b9331b14c61b6bc0e99afd21b1c/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        RTX 3060 is a graphics processing unit (GPU) made by NVIDIA. 
+                        It is used for gaming, video editing, and 3D rendering. <br>
+                        It supports ray tracing and DLSS technology. <br>
+                        RTX 3060 has 12 GB GDDR6 VRAM. <br>
+                        It delivers high-performance graphics for modern games. <br>
+                        It is suitable for 1080p and 1440p gaming.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/a5a78b9331b14c61b6bc0e99afd21b1c/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 17: SMPS -->
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">SMPS</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/cd665adb323d46d6b3cd5abbb32def2f/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        SMPS stands for Switched Mode Power Supply.
+                        It is used to convert AC power into DC power. <br>
+                        SMPS supplies power to all computer components. <br>
+                        It is efficient and compact in size. <br>
+                        SMPS protects the system from overvoltage and short circuits. <br>
+                        It is commonly used in desktop computers.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/cd665adb323d46d6b3cd5abbb32def2f/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+            <!-- Card 18: Computer cabinate -->
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Computer cabinate</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/2e11c4583ebe4fc98c073fd8a2690a06/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A computer cabinet is the outer box of a desktop computer.
+                        It holds and protects all internal components. <br>
+                        Main components inside are motherboard, CPU, RAM, HDD/SSD, SMPS, and GPU. <br>
+                        It helps in proper airflow and cooling. <br>
+                        Computer cabinets come in different sizes like ATX, Micro-ATX, and Mini-ITX. <br>
+                        It is also called a computer case or system unit.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/2e11c4583ebe4fc98c073fd8a2690a06/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+            <!-- motherboard -->
+
+            <div class="model parts gradient-border card-hover rounded-2xl p-6 shadow-xl animate-fadeIn"
+                style="animation-delay: 0.1s;">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-slate-100">Computer cabinate</h2>
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+                        Computer Parts
+                    </span>
+                </div>
+
+                <div class="relative aspect-video rounded-xl overflow-hidden mb-4 ring-1 ring-slate-700/50 shadow-lg">
+                    <iframe class="w-full h-full"
+                        src="https://sketchfab.com/models/bfcaf54d2a604e9b9319611adab8a589/embed" allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-4 px-2">
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A computer cabinet is the outer box of a desktop computer.
+                        It holds and protects all internal components. <br>
+                        Main components inside are motherboard, CPU, RAM, HDD/SSD, SMPS, and GPU. <br>
+                        It helps in proper airflow and cooling. <br>
+                        Computer cabinets come in different sizes like ATX, Micro-ATX, and Mini-ITX. <br>
+                        It is also called a computer case or system unit.
+                    </p>
+                </div>
+
+                <button
+                    class="view-btn w-full btn-gradient py-3 rounded-xl font-semibold text-white shadow-lg flex items-center justify-center gap-2"
+                    data-url="https://sketchfab.com/models/bfcaf54d2a604e9b9319611adab8a589/embed">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    View in 3D
+                </button>
+            </div>
+
+
+
+
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="modelModal">
+        <div class="modal-box">
+
+            <button id="closeBtn"
+                class="absolute top-5 right-5 z-[10001] bg-red-500 hover:bg-red-600 px-5 py-3 rounded-xl font-bold text-white shadow-2xl transition-all duration-300 flex items-center gap-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                Close
+            </button>
+
+            <iframe id="modelFrame" class="w-full h-full" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Dropdown Toggle
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('learning-menu');
+            menu.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function (event) {
+            const menu = document.getElementById('learning-menu');
+            if (menu && menu.classList.contains('show')) {
+                menu.classList.remove('show');
+            }
+        }
+
+        // Toggle Mobile Menu
+        function toggleMenu() {
+            document.getElementById('mobile-menu').classList.toggle('menu-open');
+        }
+
+        // Modal and Filter Logic
+        document.addEventListener('DOMContentLoaded', function () {
+
+            console.log('✅ Page loaded successfully!');
+
+            const modal = document.getElementById('modelModal');
+            const modalFrame = document.getElementById('modelFrame');
+            const closeBtn = document.getElementById('closeBtn');
+            const viewButtons = document.querySelectorAll('.view-btn');
+
+            console.log('Found ' + viewButtons.length + ' view buttons');
+
+            // Open modal
+            viewButtons.forEach(function (btn, index) {
+                console.log('Attaching listener to button ' + (index + 1));
+
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    console.log('🎯 Button clicked!');
+
+                    const url = this.getAttribute('data-url');
+                    console.log('Loading URL:', url);
+
+                    modalFrame.src = url + '?autostart=1';
+                    modal.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+
+                    console.log('✅ Modal opened!');
+                });
+            });
+
+            // Close button
+            closeBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                console.log('Closing modal via button');
+                modalFrame.src = '';
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            });
+
+            // Click outside to close
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    console.log('Closing modal via background click');
+                    modalFrame.src = '';
+                    modal.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // ESC key to close
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && modal.classList.contains('show')) {
+                    console.log('Closing modal via ESC key');
+                    modalFrame.src = '';
+                    modal.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Category filter
+            const filter = document.getElementById('categoryFilter');
+            const models = document.querySelectorAll('.model');
+
+            filter.addEventListener('change', function () {
+                const value = this.value;
+                models.forEach(function (m) {
+                    if (value === 'all' || m.classList.contains(value)) {
+                        m.style.display = 'block';
+                    } else {
+                        m.style.display = 'none';
+                    }
+                });
+            });
+
+            // Grid/List toggle
+            const gridBtn = document.getElementById('gridBtn');
+            const listBtn = document.getElementById('listBtn');
+            const container = document.getElementById('models');
+
+            gridBtn.addEventListener('click', function () {
+                container.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto px-4 md:px-8';
+                gridBtn.classList.add('bg-blue-600', 'border-blue-500');
+                gridBtn.classList.remove('bg-slate-800/50', 'border-slate-700/50');
+                listBtn.classList.remove('bg-purple-600', 'border-purple-500');
+                listBtn.classList.add('bg-slate-800/50', 'border-slate-700/50');
+            });
+
+            listBtn.addEventListener('click', function () {
+                container.className = 'grid grid-cols-1 gap-4 max-w-7xl mx-auto px-4 md:px-8';
+                listBtn.classList.add('bg-purple-600', 'border-purple-500');
+                listBtn.classList.remove('bg-slate-800/50', 'border-slate-700/50');
+                gridBtn.classList.remove('bg-blue-600', 'border-blue-500');
+                gridBtn.classList.add('bg-slate-800/50', 'border-slate-700/50');
+            });
+
+            console.log('✅ All event listeners attached!');
+        });
+    </script>
+
+</body>
+
+</html>
