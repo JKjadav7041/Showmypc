@@ -20,72 +20,13 @@
         }
 
         /* ============================================
-           TRUE FOCUS ANIMATION STYLES (FIRST LOAD)
-           ============================================ */
-        .focus-container {
-            position: relative;
-            display: flex; gap: 1.5rem;
-            justify-content: center; align-items: center;
-            flex-wrap: wrap; outline: none; user-select: none;
-        }
-
-        .focus-word {
-            position: relative;
-            font-size: clamp(3rem, 10vw, 6rem); 
-            font-weight: 900;
-            color: #fff;
-            transition: filter 0.5s ease;
-            z-index: 5;
-        }
-
-        .focus-frame {
-            position: absolute;
-            pointer-events: none;
-            border: none;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 10;
-        }
-
-        .corner {
-            position: absolute;
-            width: 1.5rem; height: 1.5rem;
-            border: 4px solid #3b82f6; 
-            filter: drop-shadow(0px 0px 8px #3b82f6);
-            border-radius: 4px;
-        }
-
-        .top-left { top: -15px; left: -15px; border-right: none; border-bottom: none; }
-        .top-right { top: -15px; right: -15px; border-left: none; border-bottom: none; }
-        .bottom-left { bottom: -15px; left: -15px; border-right: none; border-top: none; }
-        .bottom-right { bottom: -15px; right: -15px; border-left: none; border-top: none; }
-
-        /* ============================================
            SCROLL & LAYOUT STYLES
            ============================================ */
         .glass-nav {
             background: rgba(9, 9, 11, 0.8);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            opacity: 0; transform: translateY(-100%);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        body.scrolled .glass-nav { opacity: 1; transform: translateY(0); }
-
-        .hero-scene {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 10; 
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .main-content { position: relative; z-index: 20; opacity: 0; transition: opacity 0.8s ease; }
-        
-        body.scrolled .main-content { opacity: 1; }
-        body.scrolled .hero-scene { opacity: 0; pointer-events: none; transform: scale(1.1); }
-
-        .content-spacer { min-height: 100vh; }
 
         /* Dropdown Visibility Logic */
         .dropdown-menu {
@@ -136,9 +77,6 @@
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .scroll-section.visible { opacity: 1; transform: translateY(0); }
-
-        .nav-logo-container { transform: scale(0.5); opacity: 0; transition: 0.8s; }
-        body.scrolled .nav-logo-container { transform: scale(1); opacity: 1; }
 
         /* Tooltip for Social Icons */
         .social-link {
@@ -192,22 +130,10 @@
 
 <body class="overflow-x-hidden">
     <div class="main-website">
-        <!-- HERO SCENE WITH FOCUS ANIMATION (LOADS FIRST) -->
-        <div class="hero-scene" id="heroScene">
-            <div class="focus-container" id="focusContainer">
-                <div class="focus-frame" id="focusFrame">
-                    <span class="corner top-left"></span>
-                    <span class="corner top-right"></span>
-                    <span class="corner bottom-left"></span>
-                    <span class="corner bottom-right"></span>
-                </div>
-            </div>
-        </div>
-
         <!-- NAVBAR -->
         <header class="glass-nav fixed top-0 left-0 right-0 z-50">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <div class="flex items-center space-x-2 nav-logo-container">
+                <div class="flex items-center space-x-2">
                     <div class="w-9 h-9 bg-blue-600 text-white rounded-lg flex items-center justify-center font-extrabold text-xl shadow-lg shadow-blue-900/20">S</div>
                     <span class="text-2xl font-extrabold tracking-tight text-white">ShowMyPc</span>
                 </div>
@@ -254,10 +180,8 @@
             <a href="./T-shooting.html" class="text-red-500 hover:text-red-400">T-shooting</a>
         </div>
 
-        <!-- MAIN CONTENT (APPEARS AFTER SCROLL) -->
+        <!-- MAIN CONTENT -->
         <div class="main-content">
-            <div class="content-spacer"></div>
-
             <!-- HERO SECTION -->
             <main class="min-h-screen flex flex-col lg:flex-row items-center max-w-7xl mx-auto px-6 py-32 gap-12 scroll-section">
                 <div class="w-full lg:w-1/2 text-center lg:text-left">
@@ -449,65 +373,20 @@
     <!-- ALL JAVASCRIPT -->
     <script>
         // ============================================
-        // TRUE FOCUS ANIMATION (LOADS FIRST)
-        // ============================================
-        const sentence = "Show MyPc";
-        const words = sentence.split(" ");
-        const container = document.getElementById('focusContainer');
-        const frame = document.getElementById('focusFrame');
-        let currentIndex = 0;
-        const blurAmount = 8;
-
-        // Generate Word Elements
-        words.forEach((word, i) => {
-            const span = document.createElement('span');
-            span.innerText = word;
-            span.className = 'focus-word';
-            span.id = `word-${i}`;
-            span.style.filter = `blur(${blurAmount}px)`;
-            container.insertBefore(span, frame);
-        });
-
-        function updateFocus() {
-            const activeWord = document.getElementById(`word-${currentIndex}`);
-            if (!activeWord) return;
-
-            words.forEach((_, i) => {
-                const el = document.getElementById(`word-${i}`);
-                el.style.filter = (i === currentIndex) ? 'blur(0px)' : `blur(${blurAmount}px)`;
-            });
-
-            const rect = activeWord.getBoundingClientRect();
-            const containerRect = container.getBoundingClientRect();
-
-            frame.style.width = `${rect.width}px`;
-            frame.style.height = `${rect.height}px`;
-            frame.style.left = `${rect.left - containerRect.left}px`;
-            frame.style.top = `${rect.top - containerRect.top}px`;
-
-            currentIndex = (currentIndex + 1) % words.length;
-        }
-
-        // Initialize focus animation immediately
-        window.addEventListener('DOMContentLoaded', () => {
-            updateFocus();
-            setInterval(updateFocus, 1500);
-        });
-
-        // ============================================
         // SCROLL ANIMATIONS & EFFECTS
         // ============================================
         window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            
-            // Navbar scroll effect
-            if (scrollY > 100) {
-                document.body.classList.add('scrolled');
-            } else {
-                document.body.classList.remove('scrolled');
-            }
-
             // Section reveal animations
+            document.querySelectorAll('.scroll-section').forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.85) {
+                    sec.classList.add('visible');
+                }
+            });
+        });
+
+        // Initial reveal for sections already in viewport
+        window.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.scroll-section').forEach(sec => {
                 const rect = sec.getBoundingClientRect();
                 if (rect.top < window.innerHeight * 0.85) {
@@ -536,22 +415,6 @@
                 menu.classList.remove('show');
             }
         }
-
-        // ============================================
-        // RESPONSIVE FRAME REPOSITIONING
-        // ============================================
-        window.addEventListener('resize', () => {
-            const activeIdx = (currentIndex === 0) ? words.length - 1 : currentIndex - 1;
-            const activeWord = document.getElementById(`word-${activeIdx}`);
-            if (activeWord) {
-                const rect = activeWord.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                frame.style.left = `${rect.left - containerRect.left}px`;
-                frame.style.top = `${rect.top - containerRect.top}px`;
-            }
-        });
-
-            
     </script>
 </body>
 </html>
