@@ -49,7 +49,7 @@
         .text-shimmer {
             background: linear-gradient(90deg, #3b82f6, #8b5cf6, #3b82f6);
             background-size: 200% auto;
-             background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: shimmer 3s linear infinite;
         }
@@ -115,47 +115,233 @@
             font-size: 0.875rem;
         }
 
-        /* AI Assistant Styles - UPDATED */
-        .ai-assistant-container {
-            max-width: 7xl;
-            margin: 0 auto 4rem auto;
-            padding: 0 2rem;
-        }
-
-        .ai-prompt-bar {
-            background: linear-gradient(135deg, #1e1b4b 0%, #1e3a8a 50%, #312e81 100%);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 1.5rem;
+        /* Common Problems Dropdown Styles */
+        .problem-item {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 1rem;
             padding: 1.5rem;
+            margin-bottom: 1rem;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .problem-item:hover {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: translateX(5px);
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .problem-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #60a5fa;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .problem-icon {
+            font-size: 1.5rem;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+            color: #94a3b8;
+            font-size: 1.25rem;
+        }
+
+        .problem-item.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .problem-content {
+            max-height: 0;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: max-height 0.4s ease, margin-top 0.4s ease;
         }
 
-        .ai-prompt-bar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
-            border-color: rgba(59, 130, 246, 0.5);
+        .problem-item.active .problem-content {
+            max-height: 1000px;
+            margin-top: 1.5rem;
         }
 
-        .ai-prompt-bar.expanded {
-            padding: 2.5rem;
-            max-height: 800px; /* Increased for better visibility */
-            cursor: default;
+        .problem-steps {
+            color: #cbd5e1;
+            line-height: 1.8;
         }
 
-        .ai-header {
+        .problem-steps ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .problem-steps li {
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .problem-steps li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+        }
+
+        /* Chatbot Styles - Right Side Fixed */
+        .chatbot-container {
+            position: fixed;
+            right: 2rem;
+            bottom: 2rem;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chatbot-button {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
+        }
+
+        .chatbot-button svg {
+            width: 35px;
+            height: 35px;
+            color: white;
+        }
+
+        .chatbot-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Chatbot Expanded - Center and Zoom */
+        .chatbot-container.expanded {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            right: auto;
+            bottom: auto;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            max-width: 700px;
+            height: 85vh;
+            max-height: 800px;
+            z-index: 2000;
+        }
+
+        .chatbot-window {
+            display: none;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e1b4b 0%, #1e3a8a 50%, #312e81 100%);
+            border-radius: 2rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            overflow: hidden;
+            animation: zoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .chatbot-container.expanded .chatbot-window {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-container.expanded .chatbot-button {
+            display: none;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Chatbot Overlay */
+        .chatbot-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1999;
+            backdrop-filter: blur(5px);
+        }
+
+        .chatbot-overlay.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Chatbot Header */
+        .chatbot-header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .chatbot-title {
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 1.5rem;
         }
 
-        .ai-icon {
-            width: 3rem;
-            height: 3rem;
+        .chatbot-avatar {
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             border-radius: 50%;
             display: flex;
@@ -167,35 +353,80 @@
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
         }
 
-        .ai-title {
-            font-size: 1.75rem;
+        .chatbot-title-text h2 {
+            font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(90deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
+            margin: 0;
         }
 
-        .ai-subtitle {
+        .chatbot-title-text p {
+            font-size: 0.875rem;
             color: #c7d2fe;
-            font-size: 1rem;
-            margin-top: 0.25rem;
+            margin: 0;
         }
 
-        .prompt-input-container {
-            display: none;
+        .chatbot-close {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .ai-prompt-bar.expanded .prompt-input-container {
+        .chatbot-close:hover {
+            background: rgba(239, 68, 68, 0.8);
+            transform: rotate(90deg);
+        }
+
+        .chatbot-close svg {
+            width: 20px;
+            height: 20px;
+            color: white;
+        }
+
+        /* Chatbot Body */
+        .chatbot-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
-            animation: slideDown 0.5s ease-out;
+            gap: 1.5rem;
         }
 
-        @keyframes slideDown {
+        .chatbot-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chatbot-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chatbot-body::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 4px;
+        }
+
+        .chatbot-body::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.5);
+        }
+
+        /* Chat Message */
+        .chat-message {
+            display: flex;
+            gap: 1rem;
+            animation: slideInMessage 0.3s ease;
+        }
+
+        @keyframes slideInMessage {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -203,240 +434,179 @@
             }
         }
 
-        /* Updated layout structure */
-        .ai-content-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+        .chat-message.user {
+            flex-direction: row-reverse;
         }
 
-        .prompt-input-section {
-            order: 1;
-        }
-
-        .ai-response-section {
-            order: 2;
-            margin: 0;
-        }
-
-        .ai-controls-section {
-            order: 3;
-            margin-top: 1rem;
-        }
-
-        .prompt-input {
-            width: 100%;
-            background: rgba(15, 23, 42, 0.7);
-            border: 2px solid rgba(59, 130, 246, 0.3);
-            border-radius: 1rem;
-            padding: 1.25rem 1.5rem;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            resize: none;
-            min-height: 120px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-
-        .prompt-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-            background: rgba(15, 23, 42, 0.9);
-        }
-
-        .prompt-input::placeholder {
-            color: #94a3b8;
-        }
-
-        .ai-controls {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-        }
-
-        .ai-button {
-            padding: 0.75rem 2rem;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .ai-button-primary {
-            background: linear-gradient(135deg, #3b82f6, #6366f1);
-            color: white;
-        }
-
-        .ai-button-primary:hover:not(:disabled) {
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
-        }
-
-        .ai-button-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #cbd5e1;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .ai-button-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .ai-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* AI Response - Fixed position */
-        .ai-response {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            display: none;
-            animation: fadeIn 0.5s ease-out;
-            order: 2; /* This ensures it comes after input */
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .ai-response.show {
-            display: block;
-        }
-
-        .response-header {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .response-icon {
-            width: 2rem;
-            height: 2rem;
-            background: linear-gradient(135deg, #10b981, #34d399);
+        .message-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message-avatar.ai {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             color: white;
         }
 
-        .response-title {
-            font-weight: 700;
-            color: #34d399;
-            font-size: 1.1rem;
+        .message-avatar.user {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
         }
 
-        .response-content {
-            color: #e2e8f0;
+        .message-content {
+            max-width: 75%;
+            padding: 1rem 1.5rem;
+            border-radius: 1.25rem;
             line-height: 1.6;
-            white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 1rem;
         }
 
-        .response-content::-webkit-scrollbar {
-            width: 6px;
+        .message-content.ai {
+            background: rgba(59, 130, 246, 0.15);
+            color: #e0e7ff;
+            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
-        .response-content::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 3px;
+        .message-content.user {
+            background: rgba(16, 185, 129, 0.15);
+            color: #d1fae5;
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
-        .response-content::-webkit-scrollbar-thumb {
-            background: #3b82f6;
-            border-radius: 3px;
+        /* Chatbot Input */
+        .chatbot-input-container {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        .typing-indicator {
+        .chatbot-input-wrapper {
             display: flex;
-            gap: 0.25rem;
-            padding: 0.5rem;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .chatbot-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .chatbot-send-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-send-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .chatbot-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .chatbot-send-btn svg {
+            width: 24px;
+            height: 24px;
+            color: white;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: inline-flex;
+            gap: 5px;
             align-items: center;
         }
 
         .typing-dot {
             width: 8px;
             height: 8px;
-            background: #60a5fa;
+            background: #3b82f6;
             border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out;
+            animation: typingAnimation 1.4s infinite;
         }
 
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
         }
 
-        .cursor-hint {
-            position: absolute;
-            bottom: 1.5rem;
-            right: 2rem;
-            color: #94a3b8;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            transition: opacity 0.3s ease;
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
-        .ai-prompt-bar.expanded .cursor-hint {
-            opacity: 0;
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
         }
 
-        /* Memory indicator */
-        .memory-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #94a3b8;
-            font-size: 0.875rem;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 0.75rem;
-        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chatbot-container {
+                right: 1rem;
+                bottom: 1rem;
+            }
 
-        .memory-dot {
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
+            .chatbot-button {
+                width: 60px;
+                height: 60px;
+            }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            .chatbot-container.expanded {
+                width: 95vw;
+                height: 90vh;
+            }
+
+            .chatbot-header {
+                padding: 1rem;
+            }
+
+            .chatbot-body {
+                padding: 1rem;
+            }
+
+            .message-content {
+                max-width: 85%;
+            }
+
+            .problem-item {
+                padding: 1rem;
+            }
         }
     </style>
-
 </head>
 <body class="overflow-x-hidden">
 
+    <!-- Original Navbar -->
     <header class="glass-nav fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             
@@ -446,8 +616,8 @@
             </div>
 
             <nav class="hidden lg:flex items-center space-x-10 text-sm font-bold uppercase tracking-wide text-zinc-400">
-                <a href="index.html" class="hover:text-blue-500 transition-colors">Home</a>
-                <a href="index.html#developer" class="hover:text-blue-500 transition-colors">Developer</a>
+                <a href="./home.html" class="hover:text-blue-500 transition-colors">Home</a>
+                <a href="./home.html#developer" class="hover:text-blue-500 transition-colors">Developer</a>
                 <a href="./3d.html" class="hover:text-blue-500 transition-colors">3D-Models</a>
                 
                 <div class="relative dropdown">
@@ -471,8 +641,8 @@
 
     <div id="mobile-menu" class="fixed inset-y-0 right-0 w-64 bg-zinc-950 z-[60] transform translate-x-full lg:hidden border-l border-white/10 p-8 flex flex-col space-y-6 text-lg font-bold shadow-2xl">
         <button onclick="toggleMenu()" class="self-end mb-4 text-zinc-500 font-normal hover:text-white">✕ Close</button>
-        <a href="index.html" class="text-white hover:text-blue-500">Home</a>
-        <a href="index.html#developer" class="text-white hover:text-blue-500">Developer</a>
+        <a href="./home.html" class="text-white hover:text-blue-500">Home</a>
+        <a href="./home.html#developer" class="text-white hover:text-blue-500">Developer</a>
         <a href="./3d.html" class="text-white hover:text-blue-500">3D-Models</a>
         <div class="border-t border-white/5 pt-4 space-y-4">
             <p class="text-blue-500 text-xs uppercase tracking-widest">Learning</p>
@@ -487,7 +657,7 @@
         <div class="max-w-7xl mx-auto text-center">
             <h2 class="text-red-500 font-bold uppercase tracking-[0.3em] text-xs mb-4">Computer Troubleshooting</h2>
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tighter mb-6 text-white">
-                <span class="text-shimmer">Fix Common PC Problems</span>
+                <span class="text-shimmer">Fix Common PC Problems with AI</span>
             </h1>
             <p class="text-zinc-400 text-lg max-w-3xl mx-auto leading-relaxed">
                 Step-by-step solutions to the most common computer problems. From hardware issues to software errors, we've got you covered.
@@ -495,830 +665,364 @@
         </div>
     </section>
 
-    <!-- AI Assistant Section -->
-    <div class="ai-assistant-container">
-        <div class="ai-prompt-bar" id="aiPromptBar" onclick="expandAIPrompt(event)">
-            <div class="ai-header">
-                <div class="ai-icon">AI</div>
-                <div>
-                    <h2 class="ai-title">PC Troubleshooting AI Assistant</h2>
-                    <p class="ai-subtitle">Click to ask specific questions about PC problems not covered below</p>
-                </div>
-            </div>
-            
-            <div class="cursor-hint">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-8l-7 7-7-7"/>
-                </svg>
-                Click to expand
-            </div>
-            
-            <div class="prompt-input-container">
-                <div class="ai-content-wrapper">
-                    <!-- Input Section -->
-                    <div class="prompt-input-section">
-                        <textarea 
-                            id="aiPromptInput" 
-                            class="prompt-input" 
-                            placeholder="Describe your PC problem in detail (e.g., 'My computer makes a beeping sound on startup and won't display anything')"
-                            maxlength="1000"
-                        ></textarea>
-                        
-                        <div class="memory-indicator">
-                            <div class="memory-dot"></div>
-                            <span>Context-aware: Remembers previous questions for better assistance</span>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 pb-20">
+        
+        <!-- Common Problems Section -->
+        <section class="content-section">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                <span class="text-shimmer">Common Problems & Solutions</span>
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Problem 1: Slow Computer -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">🐌</span>
+                            <span>Slow Computer Performance</span>
                         </div>
+                        <span class="dropdown-arrow">▼</span>
                     </div>
-                    
-                    <!-- AI Response Section - This will appear right after input -->
-                    <div class="ai-response-section">
-                        <div class="ai-response" id="aiResponse">
-                            <div class="response-header">
-                                <div class="response-icon">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                </div>
-                                <div class="response-title">AI Response</div>
-                            </div>
-                            <div class="response-content" id="aiResponseContent"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Controls Section -->
-                    <div class="ai-controls-section">
-                        <div class="ai-controls">
-                            <button class="ai-button ai-button-secondary" onclick="clearAIChat()">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                                Clear Chat
-                            </button>
-                            <button class="ai-button ai-button-primary" onclick="sendAIPrompt()" id="sendAIButton">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                                </svg>
-                                Ask AI Assistant
-                            </button>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>Quick Fixes:</strong></p>
+                            <ul>
+                                <li>Close unnecessary programs and browser tabs</li>
+                                <li>Run Disk Cleanup (search "Disk Cleanup" in Windows)</li>
+                                <li>Disable startup programs in Task Manager</li>
+                                <li>Update Windows and drivers</li>
+                                <li>Check for malware with Windows Defender</li>
+                                <li>Upgrade RAM if consistently maxed out</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Your existing troubleshooting sections remain the same -->
-
-<!-- 1. Computer Not Turning ON -->
-<main class="max-w-7xl mx-auto px-8 pb-24">     
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #1</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                Computer Not Turning ON
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                When your computer doesn't power on at all, it's usually a power supply or hardware connection issue [web:1][web:3].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Check the power source:</strong> Verify that the wall outlet is working by testing it with another device like a lamp or monitor [web:3].
-                </li>
-                <li>
-                    <strong class="text-white">Inspect power cables:</strong> Ensure the power cable is securely connected to both the computer and the outlet. Check if the power strip is turned on [web:3].
-                </li>
-                <li>
-                    <strong class="text-white">Discharge residual power:</strong> Unplug the power cable, hold the power button for 15-20 seconds to drain any remaining power, then reconnect and try again [web:3].
-                </li>
-                <li>
-                    <strong class="text-white">Check PSU connections:</strong> Open the case and verify all internal power supply cables are firmly connected to the motherboard and components [web:5].
-                </li>
-                <li>
-                    <strong class="text-white">Test the power supply:</strong> If available, use the PSU's Built-In Self-Test (BIST) button or try a different power supply to rule out PSU failure [web:3][web:5].
-                </li>
-                <li>
-                    <strong class="text-white">Clear CMOS:</strong> Reset the BIOS by removing the CMOS battery for a few minutes, then reinstalling it [web:5].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 2. No Display on Monitor -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #2</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                No Display on Monitor
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                Your computer powers on but the monitor shows nothing. This is often caused by cable issues or graphics card problems [web:6][web:9].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Check monitor power:</strong> Ensure the monitor is turned on and its power cable is securely connected [web:9].
-                </li>
-                <li>
-                    <strong class="text-white">Verify cable connections:</strong> Check that HDMI, DisplayPort, or VGA cables are connected to the graphics card (not the motherboard) and monitor [web:6][web:9].
-                </li>
-                <li>
-                    <strong class="text-white">Try different cables and ports:</strong> Test with a different video cable or use another port on your graphics card [web:9].
-                </li>
-                <li>
-                    <strong class="text-white">Disconnect peripherals:</strong> Remove all USB devices, external drives, and other peripherals, then restart the computer [web:6].
-                </li>
-                <li>
-                    <strong class="text-white">Reseat the graphics card:</strong> Turn off the PC, remove the graphics card, clean the contacts, and firmly reinstall it ensuring it clicks into place [web:8][web:9].
-                </li>
-                <li>
-                    <strong class="text-white">Reseat RAM modules:</strong> Remove and reinstall RAM sticks one at a time to test if faulty memory is causing the issue [web:6][web:9].
-                </li>
-                <li>
-                    <strong class="text-white">Reset CMOS battery:</strong> Remove the coin-cell battery from the motherboard for 10-20 seconds to reset BIOS settings [web:6].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 3. Keyboard or Mouse Not Working -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #3</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                Keyboard or Mouse Not Working
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                When your keyboard or mouse stops responding, it could be a connectivity, driver, or power issue [web:7][web:10].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Restart your computer:</strong> Use keyboard shortcuts (Windows + X, then navigate to Restart) or force restart by holding the power button [web:7].
-                </li>
-                <li>
-                    <strong class="text-white">Check connections:</strong> For wired devices, ensure cables are securely plugged in. For wireless, check battery levels and Bluetooth/transmitter connections [web:7].
-                </li>
-                <li>
-                    <strong class="text-white">Enable Bluetooth:</strong> Press Windows + A to open Action Center and turn on Bluetooth if using wireless devices [web:7].
-                </li>
-                <li>
-                    <strong class="text-white">Try different USB ports:</strong> Plug the keyboard/mouse into different USB ports on your computer [web:7].
-                </li>
-                <li>
-                    <strong class="text-white">Update drivers:</strong> Press Windows + X, select Device Manager, expand "Keyboards" and "Mice and other pointing devices," right-click your device, and select "Update Driver" [web:7].
-                </li>
-                <li>
-                    <strong class="text-white">Reinstall drivers:</strong> In Device Manager, right-click the device, select "Uninstall device," restart your computer, and Windows will automatically reinstall the driver [web:7].
-                </li>
-                <li>
-                    <strong class="text-white">Test with another device:</strong> Try a different keyboard or mouse to determine if the issue is hardware or software-related [web:7].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 4. USB Device Not Detected -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #4</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                USB Device Not Detected
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                When Windows doesn't recognize your USB device, it's typically a driver, port, or power setting issue [web:11][web:14].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Restart your computer:</strong> A simple reboot can often resolve temporary USB recognition issues [web:15].
-                </li>
-                <li>
-                    <strong class="text-white">Try different USB ports:</strong> Test the device in multiple USB ports, preferably on the back of your computer for desktop PCs [web:15].
-                </li>
-                <li>
-                    <strong class="text-white">Check the device on another computer:</strong> Verify if the USB device is faulty by testing it on a different machine [web:15].
-                </li>
-                <li>
-                    <strong class="text-white">Update USB drivers:</strong> Open Device Manager, expand "Universal Serial Bus controllers," right-click each USB Root Hub, and select "Update driver" [web:14].
-                </li>
-                <li>
-                    <strong class="text-white">Disable USB selective suspend:</strong> Go to Control Panel > Power Options > Change plan settings > Change advanced power settings > USB settings > USB selective suspend setting, and set to "Disabled" [web:11][web:15].
-                </li>
-                <li>
-                    <strong class="text-white">Change drive letter:</strong> Open Disk Management, right-click the USB drive, select "Change Drive Letter and Paths," and assign a new letter [web:11][web:14].
-                </li>
-                <li>
-                    <strong class="text-white">Run Device Diagnostic:</strong> Press Windows + R, type "msdt.exe -ID DeviceDiagnostic," and follow the troubleshooter [web:13].
-                </li>
-                <li>
-                    <strong class="text-white">Reinstall USB controllers:</strong> In Device Manager, uninstall all USB Root Hubs and restart your computer for automatic reinstallation [web:11].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 5. Computer Running Very Slow -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #5</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                Computer Running Very Slow
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                Slow performance is usually caused by too many programs running, insufficient memory, or accumulated system junk [web:16][web:19].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Restart your computer:</strong> Close all programs and restart to clear memory and terminate unnecessary background processes [web:16].
-                </li>
-                <li>
-                    <strong class="text-white">Close unnecessary programs:</strong> Press Ctrl + Shift + Esc to open Task Manager, identify programs using high CPU/memory, and end those tasks [web:19].
-                </li>
-                <li>
-                    <strong class="text-white">Disable startup programs:</strong> In Task Manager, go to the Startup tab and disable programs that don't need to run at boot [web:19].
-                </li>
-                <li>
-                    <strong class="text-white">Clear temporary files:</strong> Press Windows + R, type "temp," delete all files, then repeat with "%temp%" [web:20].
-                </li>
-                <li>
-                    <strong class="text-white">Run Disk Cleanup:</strong> Search for "Disk Cleanup," select your system drive, check all boxes, and delete temporary files [web:16].
-                </li>
-                <li>
-                    <strong class="text-white">Defragment hard drive:</strong> For traditional HDDs (not SSDs), use the built-in defragmentation tool to optimize disk performance [web:19].
-                </li>
-                <li>
-                    <strong class="text-white">Check for malware:</strong> Run a full system scan with Windows Defender or your antivirus software [web:19].
-                </li>
-                <li>
-                    <strong class="text-white">Update Windows:</strong> Install all available Windows updates which may include performance improvements [web:14].
-                </li>
-                <li>
-                    <strong class="text-white">Upgrade RAM:</strong> If your computer still runs slow after these steps, consider adding more RAM for better multitasking [web:19].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 6. Virus or Malware Issue -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #6</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                Virus or Malware Issue
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                Malware infections can cause various problems including slow performance, pop-ups, and data theft [web:17][web:20].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Boot into Safe Mode:</strong> Restart your computer and press F8 before the Windows logo appears, then select Safe Mode [web:17].
-                </li>
-                <li>
-                    <strong class="text-white">Clear temporary files:</strong> Press Windows + R, type "temp," delete all files, then type "%temp%" and delete those files too [web:20].
-                </li>
-                <li>
-                    <strong class="text-white">Install/Update antivirus:</strong> Download and install a reputable antivirus like Windows Defender, Malwarebytes, or Microsoft Security Essentials [web:17].
-                </li>
-                <li>
-                    <strong class="text-white">Run full system scan:</strong> Perform a complete scan of your system and remove all detected threats [web:17][web:20].
-                </li>
-                <li>
-                    <strong class="text-white">Use Malware removal tools:</strong> Download and run specialized tools like ComboFix, TDSSKiller, or Malwarebytes to catch stubborn malware [web:17].
-                </li>
-                <li>
-                    <strong class="text-white">Uninstall suspicious programs:</strong> Use Revo Uninstaller to remove malicious programs and their remnants completely [web:17].
-                </li>
-                <li>
-                    <strong class="text-white">Run System File Checker:</strong> Open Command Prompt as admin and run "sfc /scannow" to repair corrupted system files [web:15].
-                </li>
-                <li>
-                    <strong class="text-white">Update all software:</strong> Ensure Windows, browsers, and all applications are updated to patch security vulnerabilities [web:17].
-                </li>
-                <li>
-                    <strong class="text-white">Change passwords:</strong> After cleaning, change all important passwords as they may have been compromised [web:20].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 7. No Internet Connection -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #7</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                No Internet Connection
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                Internet connectivity issues can stem from router problems, network settings, or ISP issues [web:21][web:24].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Check other devices:</strong> Test if other devices can connect to verify if the issue is with your computer or network [web:24].
-                </li>
-                <li>
-                    <strong class="text-white">Restart your modem and router:</strong> Unplug both devices, wait 30 seconds, plug in the modem first, wait 60 seconds, then plug in the router [web:21][web:24].
-                </li>
-                <li>
-                    <strong class="text-white">Check cable connections:</strong> Ensure Ethernet cables are securely connected and not damaged. For fiber, check the SPDIF module; for cable, tighten the coaxial connection [web:21].
-                </li>
-                <li>
-                    <strong class="text-white">Forget and reconnect to Wi-Fi:</strong> Go to Network Settings, forget your Wi-Fi network, then reconnect by entering the password again [web:22][web:25].
-                </li>
-                <li>
-                    <strong class="text-white">Run Network Troubleshooter:</strong> Right-click the network icon in the system tray and select "Troubleshoot problems" [web:22].
-                </li>
-                <li>
-                    <strong class="text-white">Update network drivers:</strong> Open Device Manager, expand "Network adapters," right-click your adapter, and select "Update driver" [web:22].
-                </li>
-                <li>
-                    <strong class="text-white">Reset network settings:</strong> Go to Settings > Network & Internet > Status > Network reset, then restart your computer [web:22].
-                </li>
-                <li>
-                    <strong class="text-white">Disable VPN/Firewall temporarily:</strong> Turn off VPN and firewall temporarily to see if they're blocking the connection [web:24].
-                </li>
-                <li>
-                    <strong class="text-white">Contact your ISP:</strong> If nothing works, contact your Internet Service Provider to check for outages or account issues [web:21][web:24].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 8. Blue Screen of Death (BSOD) -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #8</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                Blue Screen of Death (BSOD)
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                The Blue Screen of Death indicates critical system errors caused by hardware failures, driver issues, or corrupted files [web:26][web:29].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Note the error code:</strong> Write down the STOP code displayed on the blue screen for troubleshooting reference [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Boot into Safe Mode:</strong> Restart and press F8 repeatedly before Windows loads, then select Safe Mode [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Run System File Checker:</strong> Open Command Prompt as admin and run "sfc /scannow" to repair corrupted system files [web:29].
-                </li>
-                <li>
-                    <strong class="text-white">Run DISM tool:</strong> In Command Prompt (admin), run "DISM /Online /Cleanup-Image /RestoreHealth" to repair the Windows image [web:29].
-                </li>
-                <li>
-                    <strong class="text-white">Check disk for errors:</strong> Run "chkdsk C: /f" in Command Prompt to scan and fix disk errors (replace C: with your system drive) [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Update drivers:</strong> In Device Manager, update all drivers, especially graphics card, chipset, and storage drivers [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Uninstall recent updates:</strong> If BSOD started after a Windows update, uninstall the recent update from Settings > Update & Security > View update history [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Check hardware:</strong> Reseat RAM modules and graphics card to ensure proper connection [web:8].
-                </li>
-                <li>
-                    <strong class="text-white">Restore Windows:</strong> Use System Restore to revert to a point before the BSOD started occurring [web:26].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 9. BIOS Error -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #9</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                BIOS Error
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                BIOS errors prevent your computer from booting properly and can be caused by corrupted firmware, hardware changes, or failed updates [web:27][web:30].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Reset CMOS:</strong> Turn off the computer, unplug it, remove the CMOS battery from the motherboard for 20 minutes, then reinstall it [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Check hardware connections:</strong> Ensure all cables, RAM, and expansion cards are properly seated in their slots [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Remove graphics card:</strong> Try booting without the dedicated graphics card to see if it's causing conflicts [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Replace CMOS battery:</strong> If the battery is old (3-5 years), replace it with a new CR2032 battery [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Update BIOS:</strong> Download the latest BIOS update from your motherboard manufacturer's website onto a USB drive [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Flash BIOS:</strong> Boot into BIOS (usually by pressing Del or F2), navigate to the BIOS update utility, and flash the BIOS using the USB drive [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Use backup BIOS:</strong> If your motherboard has a backup BIOS chip, switch to it using the motherboard's jumper or button [web:27].
-                </li>
-                <li>
-                    <strong class="text-white">Replace BIOS chip:</strong> As a last resort, you may need to replace the BIOS chip or the entire motherboard if corruption is severe [web:27][web:30].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- 10. File Missing or Corrupted -->
-<section class="content-section">
-    <div class="bg-zinc-900/70 border border-white/10 rounded-3xl p-8 md:p-12">
-        <div class="mb-8">
-            <div class="inline-block bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2 mb-4">
-                <span class="text-red-400 font-bold text-sm uppercase tracking-wider">Problem #10</span>
-            </div>
-            <h2 class="text-3xl md:text-4xl font-black mb-4 text-white">
-                File Missing or Corrupted
-            </h2>
-            <p class="text-zinc-400 text-lg mb-6">
-                System files can become corrupted due to malware, improper shutdowns, or disk errors, preventing Windows from starting properly [web:26][web:29].
-            </p>
-        </div>
-
-        <div class="bg-black/30 rounded-2xl p-6 border border-white/5">
-            <h3 class="text-xl font-bold text-blue-400 mb-4">Step-by-Step Solution:</h3>
-            <ul class="step-list text-zinc-300">
-                <li>
-                    <strong class="text-white">Boot into Safe Mode:</strong> Restart your computer and press F8 before Windows loads, then select Safe Mode [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Run System File Checker:</strong> Open Command Prompt as administrator and run "sfc /scannow" to scan and repair corrupted system files [web:29].
-                </li>
-                <li>
-                    <strong class="text-white">Run DISM tool:</strong> Execute "DISM /Online /Cleanup-Image /RestoreHealth" in Command Prompt (admin) to repair the Windows component store [web:29].
-                </li>
-                <li>
-                    <strong class="text-white">Check disk for errors:</strong> Run "chkdsk C: /f /r" to scan for bad sectors and fix file system errors (replace C: with your drive letter) [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Use Windows Recovery:</strong> Boot from a Windows installation USB, select "Repair your computer," then choose "Startup Repair" [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Restore from backup:</strong> If you have system backups, restore your system to a point before the file corruption occurred [web:26].
-                </li>
-                <li>
-                    <strong class="text-white">Reinstall the application:</strong> If a specific program file is corrupted, uninstall and reinstall that application [web:20].
-                </li>
-                <li>
-                    <strong class="text-white">Perform system restore:</strong> Use System Restore to revert Windows to a previous working state [web:14].
-                </li>
-                <li>
-                    <strong class="text-white">Clean install Windows:</strong> As a last resort, backup your data and perform a clean Windows installation [web:26].
-                </li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-</main>
-
-      <script>
-        // AI Assistant Variables
-        const API_KEY = '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';
-        const conversationHistory = [];
-        let isExpanded = false;
-
-        // Toggle Desktop Dropdown
-        function toggleDropdown(event) {
-            event.stopPropagation();
-            const menu = document.getElementById('learning-menu');
-            menu.classList.toggle('show');
-        }
-
-        // Close dropdown when clicking outside
-        window.onclick = function(event) {
-            const menu = document.getElementById('learning-menu');
-            if (menu && menu.classList.contains('show')) {
-                menu.classList.remove('show');
-            }
-        }
-
-        // Toggle Mobile Menu
-        function toggleMenu() {
-            document.getElementById('mobile-menu').classList.toggle('menu-open');
-        }
-
-        // Expand AI Prompt Bar
-        function expandAIPrompt(event) {
-            const aiBar = document.getElementById('aiPromptBar');
-            const promptInput = document.getElementById('aiPromptInput');
-            
-            if (!isExpanded) {
-                aiBar.classList.add('expanded');
-                isExpanded = true;
-                
-                // Focus on input after animation
-                setTimeout(() => {
-                    promptInput.focus();
-                }, 400);
-                
-                // Prevent clicks inside from closing
-                event.stopPropagation();
-            }
-        }
-
-        // Close AI Prompt Bar when clicking outside
-        document.addEventListener('click', function(event) {
-            const aiBar = document.getElementById('aiPromptBar');
-            const clickedInside = aiBar.contains(event.target);
-            
-            if (isExpanded && !clickedInside) {
-                aiBar.classList.remove('expanded');
-                isExpanded = false;
-                
-                // Hide response when closing
-                document.getElementById('aiResponse').classList.remove('show');
-            }
-        });
-
-        // Send AI Prompt
-        async function sendAIPrompt() {
-            const promptInput = document.getElementById('aiPromptInput');
-            const sendButton = document.getElementById('sendAIButton');
-            const responseContent = document.getElementById('aiResponseContent');
-            const responseDiv = document.getElementById('aiResponse');
-            
-            const prompt = promptInput.value.trim();
-            
-            if (!prompt) {
-                alert('Please describe your PC problem first!');
-                promptInput.focus();
-                return;
-            }
-            
-            // Disable button and show loading
-            sendButton.disabled = true;
-            sendButton.innerHTML = `
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
+                <!-- Problem 2: Blue Screen of Death -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">💀</span>
+                            <span>Blue Screen of Death (BSOD)</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>Troubleshooting Steps:</strong></p>
+                            <ul>
+                                <li>Note the error code displayed on the blue screen</li>
+                                <li>Boot in Safe Mode (press F8 during startup)</li>
+                                <li>Update or rollback recently installed drivers</li>
+                                <li>Run Windows Memory Diagnostic</li>
+                                <li>Check for Windows updates</li>
+                                <li>If persistent, consider reinstalling Windows</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                Thinking...
-            `;
-            
-            // Show typing indicator in response
-            responseContent.innerHTML = `
-                <div class="typing-indicator">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <span style="color: #94a3b8; margin-left: 10px;">AI is analyzing your problem...</span>
+
+                <!-- Problem 3: No Internet Connection -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">📡</span>
+                            <span>No Internet Connection</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>Quick Solutions:</strong></p>
+                            <ul>
+                                <li>Restart your router and modem (unplug for 30 seconds)</li>
+                                <li>Check if other devices can connect</li>
+                                <li>Run Windows Network Troubleshooter</li>
+                                <li>Update network adapter driver</li>
+                                <li>Reset TCP/IP: Open CMD as admin and run: <code>netsh int ip reset</code></li>
+                                <li>Forget and reconnect to WiFi network</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            `;
-            responseDiv.classList.add('show');
-            
-            // Add to conversation history
-            conversationHistory.push({
-                role: 'user',
-                content: prompt
-            });
-            
-            try {
-                // Prepare system context with memory
-                const systemContext = {
-                    role: 'system',
-                    content: `You are a PC troubleshooting expert for ShowMyPc. You help users diagnose and fix computer problems.
-                    
-                    Previous conversation context: ${conversationHistory.slice(0, -1).map(msg => `${msg.role}: ${msg.content}`).join('\n')}
-                    
-                    Current user problem: ${prompt}
-                    
-                    Provide a detailed, step-by-step troubleshooting guide. Include:
-                    1. Brief diagnosis of the likely issue
-                    2. Step-by-step solutions with clear instructions
-                    3. Safety precautions if needed
-                    4. When to seek professional help
-                    5. Preventive tips
-                    
-                    Format your response with clear headings and bullet points. Be technical but user-friendly.`
-                };
-                
-                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'HTTP-Referer': 'https://showmypc.com',
-                        'X-Title': 'ShowMyPc Troubleshooting',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        model: 'openai/gpt-5.2',
-                        messages: [systemContext, ...conversationHistory],
-                        max_tokens: 1000,
-                        temperature: 0.7,
-                    }),
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.choices && data.choices[0]) {
-                    const aiResponse = data.choices[0].message.content;
-                    
-                    // Add AI response to conversation history
-                    conversationHistory.push({
-                        role: 'assistant',
-                        content: aiResponse
-                    });
-                    
-                    // Display formatted response
-                    responseContent.innerHTML = formatAIResponse(aiResponse);
-                    
-                    // Clear input
-                    promptInput.value = '';
-                    
-                    // Scroll response into view
-                    responseDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                    throw new Error('Invalid response from AI');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                responseContent.innerHTML = `
-                    <div style="color: #ef4444;">
-                        <strong>Error:</strong> Unable to get AI response. Please try again.
-                        <br><br>
-                        <em>You can still:</em>
-                        <ul style="margin-top: 10px; padding-left: 20px;">
-                            <li>Check the troubleshooting guides above</li>
-                            <li>Try again in a few minutes</li>
-                            <li>Contact our support team</li>
+
+                <!-- Problem 4: Computer Won't Start -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">⚡</span>
+                            <span>Computer Won't Turn On</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>Diagnostic Steps:</strong></p>
+                            <ul>
+                                <li>Check power cable connections</li>
+                                <li>Verify power outlet is working</li>
+                                <li>For laptops, remove battery and hold power button for 30 seconds</li>
+                                <li>Check for POST beep codes (listen for beeping patterns)</li>
+                                <li>Reseat RAM modules</li>
+                                <li>If no signs of life, power supply may need replacement</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 5: Overheating -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">🔥</span>
+                            <span>Computer Overheating</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>Cooling Solutions:</strong></p>
+                            <ul>
+                                <li>Clean dust from vents and fans with compressed air</li>
+                                <li>Ensure proper ventilation (don't use on bed/soft surfaces)</li>
+                                <li>Check if fans are spinning properly</li>
+                                <li>Reapply thermal paste to CPU/GPU (advanced users)</li>
+                                <li>Use laptop cooling pad</li>
+                                <li>Reduce CPU usage by closing heavy applications</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 6: Audio Not Working -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">🔇</span>
+                            <span>No Sound / Audio Issues</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>Audio Fixes:</strong></p>
+                            <ul>
+                                <li>Check volume mixer settings (right-click speaker icon)</li>
+                                <li>Verify correct output device is selected</li>
+                                <li>Run Windows Audio Troubleshooter</li>
+                                <li>Update audio drivers from Device Manager</li>
+                                <li>Restart Windows Audio service</li>
+                                <li>Check if headphones/speakers are properly connected</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem 7: USB Ports Not Working -->
+                <div class="problem-item" onclick="toggleProblem(this)">
+                    <div class="problem-header">
+                        <div class="problem-title">
+                            <span class="problem-icon">🔌</span>
+                            <span>USB Ports Not Working</span>
+                        </div>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="problem-content">
+                        <div class="problem-steps">
+                            <p><strong>USB Troubleshooting:</strong></p>
+                            <ul>
+                                <li>Try different USB ports</li>
+                                <li>Test with different USB devices</li>
+                                <li>Restart computer</li>
+                                <li>Update USB drivers in Device Manager</li>
+                                <li>Uninstall and reinstall USB controllers</li>
+                                <li>Disable USB Selective Suspend in Power Options</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Troubleshooting Section -->
+        <section class="content-section mt-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                <span class="text-shimmer">Advanced Troubleshooting Tips</span>
+            </h2>
+
+            <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-8">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-blue-400 mb-4">🛠️ System Maintenance</h3>
+                        <ul class="step-list">
+                            <li>Regularly update Windows and all drivers</li>
+                            <li>Run antivirus scans weekly</li>
+                            <li>Clean temporary files monthly</li>
+                            <li>Backup important data regularly</li>
+                            <li>Monitor system temperature</li>
                         </ul>
                     </div>
-                `;
-            } finally {
-                // Re-enable button
-                sendButton.disabled = false;
-                sendButton.innerHTML = `
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                    </svg>
-                    Ask AI Assistant
-                `;
-            }
-        }
-
-        // Format AI Response
-        function formatAIResponse(text) {
-            // Convert markdown-like formatting to HTML
-            let formatted = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/^### (.*$)/gm, '<h3 style="color: #3b82f6; margin-top: 1rem; margin-bottom: 0.5rem; font-size: 1.1rem;">$1</h3>')
-                .replace(/^## (.*$)/gm, '<h2 style="color: #60a5fa; margin-top: 1.2rem; margin-bottom: 0.6rem; font-size: 1.2rem;">$1</h2>')
-                .replace(/^# (.*$)/gm, '<h1 style="color: #3b82f6; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.3rem;">$1</h1>')
-                .replace(/^\d+\.\s+(.*$)/gm, '<li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">$1</li>')
-                .replace(/^-\s+(.*$)/gm, '<li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative; list-style-type: disc;">$1</li>')
-                .split('\n')
-                .map(line => {
-                    if (line.startsWith('<')) return line;
-                    if (line.trim() === '') return '<br>';
-                    return `<p style="margin-bottom: 0.75rem;">${line}</p>`;
-                })
-                .join('');
-            
-            return formatted;
-        }
-
-        // Clear AI Chat
-        function clearAIChat() {
-            conversationHistory.length = 0;
-            document.getElementById('aiResponseContent').innerHTML = '';
-            document.getElementById('aiResponse').classList.remove('show');
-            document.getElementById('aiPromptInput').value = '';
-            document.getElementById('aiPromptInput').focus();
-            
-            // Show confirmation
-            const responseContent = document.getElementById('aiResponseContent');
-            const responseDiv = document.getElementById('aiResponse');
-            
-            responseContent.innerHTML = `
-                <div style="color: #10b981; text-align: center; padding: 1rem;">
-                    <strong>Chat cleared!</strong> You can start a new conversation.
+                    <div>
+                        <h3 class="text-xl font-bold text-purple-400 mb-4">🔧 Quick Diagnostics</h3>
+                        <ul class="step-list">
+                            <li>Check Event Viewer for errors</li>
+                            <li>Run System File Checker (sfc /scannow)</li>
+                            <li>Use Task Manager to identify resource hogs</li>
+                            <li>Monitor disk health with CrystalDiskInfo</li>
+                            <li>Test RAM with Windows Memory Diagnostic</li>
+                        </ul>
+                    </div>
                 </div>
-            `;
-            responseDiv.classList.add('show');
-            
-            setTimeout(() => {
-                responseDiv.classList.remove('show');
-            }, 2000);
+            </div>
+        </section>
+    </main>
+
+    <!-- Chatbot Overlay -->
+    <div class="chatbot-overlay" id="chatbotOverlay" onclick="closeChatbot()"></div>
+
+    <!-- AI Chatbot Container -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <!-- Floating Button -->
+        <div class="chatbot-button" onclick="openChatbot()">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+            </svg>
+            <div class="chatbot-badge">AI</div>
+        </div>
+
+        <!-- Chatbot Window -->
+        <div class="chatbot-window">
+            <!-- Header -->
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <div class="chatbot-avatar">AI</div>
+                    <div class="chatbot-title-text">
+                        <h2>AI Assistant</h2>
+                        <p>Powered by ShowMyPc</p>
+                    </div>
+                </div>
+                <div class="chatbot-close" onclick="closeChatbot()">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Chat Body -->
+            <div class="chatbot-body" id="chatMessages">
+                <!-- Welcome Message -->
+                <div class="chat-message">
+                    <div class="message-avatar ai">AI</div>
+                    <div class="message-content ai">
+                        👋 Hello! I'm your advanced PC troubleshooting assistant powered by GPT-5.2. Describe your problem in detail and I'll help you solve it!
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chatbot-input-container">
+                <div class="chatbot-input-wrapper">
+                    <input 
+                        type="text" 
+                        class="chatbot-input" 
+                        id="chatInput"
+                        placeholder="Type your PC problem here..."
+                        onkeypress="handleKeyPress(event)"
+                    >
+                    <button class="chatbot-send-btn" id="sendBtn" onclick="sendMessage()">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+    // Navigation Dropdown
+    function toggleDropdown(event) {
+        event.stopPropagation();
+        const menu = document.getElementById('learning-menu');
+        menu.classList.toggle('show');
+    }
+
+    document.addEventListener('click', function() {
+        const menu = document.getElementById('learning-menu');
+        if (menu) menu.classList.remove('show');
+    });
+
+    function toggleMenu() {
+        document.getElementById('mobile-menu').classList.toggle('menu-open');
+    }
+
+    function toggleProblem(element) {
+        const allItems = document.querySelectorAll('.problem-item');
+        allItems.forEach(item => {
+            if (item !== element) {
+                item.classList.remove('active');
+            }
+        });
+        element.classList.toggle('active');
+    }
+
+    // Chatbot open/close
+    function openChatbot() {
+        document.getElementById('chatbotContainer').classList.add('expanded');
+        document.getElementById('chatbotOverlay').classList.add('active');
+        document.getElementById('chatInput').focus();
+    }
+
+    function closeChatbot() {
+        document.getElementById('chatbotContainer').classList.remove('expanded');
+        document.getElementById('chatbotOverlay').classList.remove('active');
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
         }
+    }
 
-        // Allow Enter key to send (with Shift+Enter for new line)
-        document.getElementById('aiPromptInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendAIPrompt();
-            }
-        });
+    // RULE-BASED CHATBOT
+    function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if (!message) return;
 
-        // Add scroll animation trigger
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate elements when they come into view
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe all content sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                observer.observe(section);
-            });
-            
-            // Auto-focus AI input if URL has parameter
-            if (window.location.search.includes('ai=true')) {
-                setTimeout(() => {
-                    expandAIPrompt({ stopPropagation: () => {} });
-                }, 1000);
-            }
-        });
-    </script>
+        addMessage(message, 'user');
+        input.value = '';
+
+        // Get answer from rules.js
+        const reply = getAnswer(message);
+
+        setTimeout(() => {
+            addMessage(reply, 'ai');
+        }, 400);
+    }
+
+    function addMessage(text, sender) {
+        const messagesContainer = document.getElementById('chatMessages');
+
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `chat-message ${sender}`;
+
+        const avatar = document.createElement('div');
+        avatar.className = `message-avatar ${sender}`;
+        avatar.textContent = sender === 'ai' ? 'AI' : 'You';
+
+        const content = document.createElement('div');
+        content.className = `message-content ${sender}`;
+        content.innerHTML = text;
+
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+        messagesContainer.appendChild(messageDiv);
+
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+</script>
+<script src="rule.js"></script>
 </body>
 </html>
